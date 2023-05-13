@@ -22,17 +22,39 @@ class UsersView(View):
         return render(request, 'career/users.html', {'users': users, 'id': id})
 
 
-
-
 class LoginView(View):
     def get(self, request):
-        render(request, 'career/login.html')
+        return render(request, 'career/login.html')
 
     def post(self, request):
         username = request.POST.get("username", "")
+        password = request.POST.GET("password", "")
+
+        try:
+            statement = "SELECT * FROM User Where username= " + username + "AND password " + password + ";"
+            cursor = connection.cursor()
+            cursor.execute(statement)
+            user = cursor.fetchone()
+            cursor.close()
+
+        except:
+            print("db cannot be found")
+            return render(request, 'career/login.html')
+
+        if user != None:
+                request.session['username'] = username
+                request.session['user_id'] = user[0]
+                success = True
+                context = {'success': success, 'username': username}
+                # return JsonResponse(context)
+                return HttpResponseRedirect("/home")
+        else:
+            return render(request, 'career/Login.html')
 
 
 
+
+"""
 def login(request):
     if request.method == 'POST':
         # get username and password from front-end
@@ -62,3 +84,4 @@ def login(request):
             return render(request, 'travel/Login.html')
     else:
         return render(request, 'travel/Login.html')
+"""
