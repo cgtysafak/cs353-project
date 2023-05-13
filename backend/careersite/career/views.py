@@ -10,6 +10,16 @@ class HomeView(View):
         return render(request, 'career/home.html')
 
 
+class UsersView(View):
+    def get(self, request):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM User;")
+        users = cursor.fetchall()
+
+        return render(request, 'career/users.html', {'users': users})
+
+
+
 
 #class LoginView(View):
 #    def get(self, request):

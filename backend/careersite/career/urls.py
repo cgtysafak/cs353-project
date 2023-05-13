@@ -11,4 +11,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('home/', views.HomeView.as_view(),  name="home"),
+    path('users/', views.UsersView.as_view(), name="users"),
 ]
