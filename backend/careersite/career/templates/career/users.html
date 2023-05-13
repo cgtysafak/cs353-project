@@ -1,3 +1,5 @@
+
+{% block content %}
 <html>
 <head>
     <title>User List</title>
@@ -5,14 +7,17 @@
 <body>
     <h1>User List</h1>
 
+    {{id}}
     <ul>
         {% for user in users %}
             <li>
-                {{user.user_id}}
-                <strong>Name:</strong> {{user.full_name}}<br>
-                <strong>Username:</strong> {{user.username}}
+                {{user.0}}
+                <strong>Name:</strong> {{user.1}}<br>
+                <strong>Username:</strong> {{user.2}}
             </li>
         {% endfor %}
     </ul>
 </body>
 </html>
+
+{% endblock %}

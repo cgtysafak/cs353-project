@@ -16,17 +16,20 @@ class UsersView(View):
         cursor.execute("SELECT * FROM User;")
         users = cursor.fetchall()
 
+        id = users[1][1];
         cursor.close()
 
-        return render(request, 'career/users.html', {'users': users})
+        return render(request, 'career/users.html', {'users': users, 'id': id})
 
 
 
 
-#class LoginView(View):
-#    def get(self, request):
+class LoginView(View):
+    def get(self, request):
+        render(request, 'career/login.html')
 
-
+    def post(self, request):
+        username = request.POST.get("username", "")
 
 
 
