@@ -71,7 +71,7 @@ class SignUpView(View):
             print("passwords are not same")
             return render(request, 'career/signup.html')
         else:
-            if username !="" and  email != "" and password != "":
+            if username !="" and email != "" and password != "":
                 parameters = [fullname, username, password, email, registration_time]
                 cursor = connection.cursor()
                 cursor.execute(
@@ -87,6 +87,13 @@ class SignUpView(View):
                 print("Please fill all information")
                 return render(request, 'career/signup.html')
 
+
+class LogoutView(View):
+    def get(self, request):
+        request.session.flush()
+        return HttpResponseRedirect("/")
+
+    
 """
 def login(request):
     if request.method == 'POST':
