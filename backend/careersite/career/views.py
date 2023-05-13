@@ -7,11 +7,9 @@ from datetime import datetime, timedelta
 
 # Create your views here.
 
-
 class HomeView(View):
     def get(self, request):
         return render(request, 'career/home.html')
-
 
 class UsersView(View):
     def get(self, request):
@@ -19,11 +17,9 @@ class UsersView(View):
         cursor.execute("SELECT * FROM User;")
         users = cursor.fetchall()
 
-        id = users[1][1];
         cursor.close()
 
-        return render(request, 'career/users.html', {'users': users, 'id': id})
-
+        return render(request, 'career/users.html', {'users': users})
 
 class LoginView(View):
     def get(self, request):
@@ -59,13 +55,12 @@ class SignUpView(View):
         return render(request, 'career/signup.html')
 
     def post(self, request):
-        print("--- NOM NOM NOM ---")
         username = request.POST.get("username", "")
         email = request.POST.get("email", "")
         password = request.POST.get("password", "")
         passwordver = request.POST.get("passwordverification", "")
         fullname = request.POST.get("fullname", "")
-        user_type = request.POST.get("type", "")
+        user_type = request.POST.get("usertype", "")
         registration_time = datetime.now() + timedelta(hours=3)
 
 
@@ -91,23 +86,21 @@ class SignUpView(View):
                 cursor.execute("INSERT INTO NonAdmin(user_id) VALUES(%s);", user_id)
                 cursor.close()
                 connection.commit()
+                print(user_type)
 
                 if user_type == "Job Hunter":
-                    print("-------------------nom1")
                     cursor = connection.cursor()
                     cursor.execute("INSERT INTO RegularUser(user_id) VALUES(%s);", user_id)
                     cursor.close()
                     connection.commit()
 
                 elif user_type == "Recruiter":
-                    print("-------------------nom2")
                     cursor = connection.cursor()
                     cursor.execute("INSERT INTO Recruiter(user_id) VALUES(%s);", user_id)
                     cursor.close()
                     connection.commit()
 
                 elif user_type == "Career Expert":
-                    print("-------------------nom3")
                     cursor = connection.cursor()
                     cursor.execute("INSERT INTO CareerExpert(user_id) VALUES(%s);", user_id)
                     cursor.close()
