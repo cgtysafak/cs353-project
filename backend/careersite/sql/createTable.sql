@@ -42,7 +42,7 @@ CREATE TABLE Admin(
 
 CREATE TABLE NonAdmin(
     user_id INTEGER PRIMARY KEY,
-    birth_date DATETIME NOT NULL,
+    birth_date DATETIME,
     profession VARCHAR(100),
     skills VARCHAR(1023),
     FOREIGN KEY(user_id) REFERENCES User(user_id)

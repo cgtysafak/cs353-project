@@ -65,7 +65,9 @@ class SignUpView(View):
         password = request.POST.get("password", "")
         passwordver = request.POST.get("passwordverification", "")
         fullname = request.POST.get("fullname", "")
+        user_type = request.POST.get("type", "")
         registration_time = datetime.now() + timedelta(hours=3)
+
 
         if(password != passwordver):
             print("passwords are not same")
@@ -77,9 +79,39 @@ class SignUpView(View):
                 cursor.execute(
                     "INSERT INTO User(full_name, username, password, email_address, date_of_registration) VALUES(%s,%s,%s,%s,%s);",
                     parameters)
-
                 cursor.close()
                 connection.commit()
+
+                cursor = connection.cursor()
+                cursor.execute("SELECT user_id FROM USER WHERE username = '" + username + "'")
+                user_id = cursor.fetchone()
+                cursor.close()
+
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO NonAdmin(user_id) VALUES(%s);", user_id)
+                cursor.close()
+                connection.commit()
+
+                if user_type == "Job Hunter":
+                    print("-------------------nom1")
+                    cursor = connection.cursor()
+                    cursor.execute("INSERT INTO RegularUser(user_id) VALUES(%s);", user_id)
+                    cursor.close()
+                    connection.commit()
+
+                elif user_type == "Recruiter":
+                    print("-------------------nom2")
+                    cursor = connection.cursor()
+                    cursor.execute("INSERT INTO Recruiter(user_id) VALUES(%s);", user_id)
+                    cursor.close()
+                    connection.commit()
+
+                elif user_type == "Career Expert":
+                    print("-------------------nom3")
+                    cursor = connection.cursor()
+                    cursor.execute("INSERT INTO CareerExpert(user_id) VALUES(%s);", user_id)
+                    cursor.close()
+                    connection.commit()
 
                 print("user is successfully created")
                 return HttpResponseRedirect("/home")
@@ -93,7 +125,7 @@ class LogoutView(View):
         request.session.flush()
         return HttpResponseRedirect("/")
 
-    
+
 """
 def login(request):
     if request.method == 'POST':
