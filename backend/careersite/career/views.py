@@ -59,6 +59,7 @@ class SignUpView(View):
         return render(request, 'career/signup.html')
 
     def post(self, request):
+        print("--- NOM NOM NOM ---")
         username = request.POST.get("username", "")
         email = request.POST.get("email", "")
         password = request.POST.get("password", "")
@@ -66,16 +67,15 @@ class SignUpView(View):
         fullname = request.POST.get("fullname", "")
         registration_time = datetime.now() + timedelta(hours=3)
 
-        if( password == passwordver):
-            print( "passwords are not same")
+        if(password != passwordver):
+            print("passwords are not same")
             return render(request, 'career/signup.html')
-
         else:
             if username !="" and  email != "" and password != "":
-                parameters = [fullname, username, password, email, ]
+                parameters = [fullname, username, password, email, registration_time]
                 cursor = connection.cursor()
                 cursor.execute(
-                    "INSERT INTO User(full_name, username, passsword, email, date_of_registration) VALUES(%s,%s,%s,%s,%s);",
+                    "INSERT INTO User(full_name, username, password, email_address, date_of_registration) VALUES(%s,%s,%s,%s,%s);",
                     parameters)
 
                 cursor.close()
@@ -83,16 +83,9 @@ class SignUpView(View):
 
                 print("user is successfully created")
                 return HttpResponseRedirect("/home")
-
             else:
                 print("Please fill all information")
                 return render(request, 'career/signup.html')
-
-
-
-
-
-
 
 """
 def login(request):
