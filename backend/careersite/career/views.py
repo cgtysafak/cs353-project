@@ -16,6 +16,8 @@ class UsersView(View):
         cursor.execute("SELECT * FROM User;")
         users = cursor.fetchall()
 
+        cursor.close()
+
         return render(request, 'career/users.html', {'users': users})
 
 
