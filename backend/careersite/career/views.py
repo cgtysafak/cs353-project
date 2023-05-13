@@ -31,7 +31,7 @@ class LoginView(View):
         password = request.POST.get("password", "")
 
         try:
-            statement = "SELECT * FROM User Where username= " + username + "AND password " + password + ";"
+            statement = "SELECT * FROM User Where username= '" + username + "' AND password='" + password + "'"
             cursor = connection.cursor()
             cursor.execute(statement)
             user = cursor.fetchone()
