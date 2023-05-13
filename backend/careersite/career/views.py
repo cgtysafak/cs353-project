@@ -4,12 +4,15 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import View
 from datetime import date
 from datetime import datetime, timedelta
+from django.shortcuts import redirect
+from django.contrib import messages
 
 # Create your views here.
 
 class HomeView(View):
     def get(self, request):
-        return render(request, 'career/home.html')
+        user_type = request.session['user_type']
+        return render(request, 'career/home.html', {'user_type': user_type})
 
 class UsersView(View):
     def get(self, request):
@@ -43,12 +46,17 @@ class LoginView(View):
         if user != None:
                 request.session['username'] = username
                 request.session['user_id'] = user[0]
+                request.session['user_type'] = user[7]
+                print("--------------------", request.session['user_type'])
                 success = True
                 context = {'success': success, 'username': username}
                 # return JsonResponse(context)
+                messages.success(request, 'You logged the system successfully')
                 return HttpResponseRedirect("/home")
         else:
+            messages.error(request, 'User cannot be found')
             return render(request, 'career/login.html')
+
 
 class SignUpView(View):
     def get(self, request):
@@ -69,10 +77,10 @@ class SignUpView(View):
             return render(request, 'career/signup.html')
         else:
             if username !="" and email != "" and password != "":
-                parameters = [fullname, username, password, email, registration_time]
+                parameters = [fullname, username, password, email, registration_time, user_type]
                 cursor = connection.cursor()
                 cursor.execute(
-                    "INSERT INTO User(full_name, username, password, email_address, date_of_registration) VALUES(%s,%s,%s,%s,%s);",
+                    "INSERT INTO User(full_name, username, password, email_address, date_of_registration, user_type) VALUES(%s,%s,%s,%s,%s, %s);",
                     parameters)
                 cursor.close()
                 connection.commit()
@@ -106,6 +114,10 @@ class SignUpView(View):
                     cursor.close()
                     connection.commit()
 
+                request.session['username'] = username
+                request.session['user_id'] = user_id
+                request.session['type'] = user_type
+
                 print("user is successfully created")
                 return HttpResponseRedirect("/home")
             else:
@@ -118,6 +130,8 @@ class LogoutView(View):
         request.session.flush()
         return HttpResponseRedirect("/")
 
+
+#class ExperienceView(View):
 
 """
 def login(request):

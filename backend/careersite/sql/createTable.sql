@@ -32,7 +32,8 @@ CREATE TABLE User(
     password VARCHAR(100),
     email_address VARCHAR(100) UNIQUE NOT NULL,
     dp_url VARCHAR(255),
-    date_of_registration DATETIME
+    date_of_registration DATETIME,
+    user_type VARCHAR(30)
 );
 
 CREATE TABLE Admin(
@@ -215,11 +216,11 @@ CREATE TABLE Chat(
 );
 
 
-INSERT INTO User (full_name, username, password, email_address, dp_url, date_of_registration)
+INSERT INTO User (full_name, username, password, email_address, dp_url, date_of_registration, user_type)
 VALUES
-    ('John Doe', 'johndoe', 'password123', 'johndoe@example.com', 'https://example.com/johndoe.jpg', '2023-05-13 10:30:00'),
-    ('Jane Smith', 'janesmith', 'letmein', 'janesmith@example.com', 'https://example.com/janesmith.jpg', '2023-05-14 15:45:00'),
-    ('Robert Johnson', 'robjohnson', 'secret123', 'robjohnson@example.com', NULL, '2023-05-15 09:00:00');
+    ('John Doe', 'johndoe', 'password123', 'johndoe@example.com', 'https://example.com/johndoe.jpg', '2023-05-13 10:30:00', 'RegularUser'),
+    ('Jane Smith', 'janesmith', 'letmein', 'janesmith@example.com', 'https://example.com/janesmith.jpg', '2023-05-14 15:45:00', 'Recruiter'),
+    ('Robert Johnson', 'robjohnson', 'secret123', 'robjohnson@example.com', NULL, '2023-05-15 09:00:00', 'RegularUser');
 
 
 
