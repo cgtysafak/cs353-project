@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import View
+from datetime import date
+from datetime import datetime, timedelta
+
 # Create your views here.
 
 
@@ -54,6 +57,41 @@ class LoginView(View):
 class SignUpView(View):
     def get(self, request):
         return render(request, 'career/signup.html')
+
+    def post(self, request):
+        username = request.POST.get("username", "")
+        email = request.POST.get("email", "")
+        password = request.POST.get("password", "")
+        passwordver = request.POST.get("passwordverification", "")
+        fullname = request.POST.get("fullname", "")
+        registration_time = datetime.now() + timedelta(hours=3)
+
+        if( password == passwordver):
+            print( "passwords are not same")
+            return render(request, 'career/signup.html')
+
+        else:
+            if username !="" and  email != "" and password != "":
+                parameters = [fullname, username, password, email, ]
+                cursor = connection.cursor()
+                cursor.execute(
+                    "INSERT INTO User(full_name, username, passsword, email, date_of_registration) VALUES(%s,%s,%s,%s,%s);",
+                    parameters)
+
+                cursor.close()
+                connection.commit()
+
+                print("user is successfully created")
+                return HttpResponseRedirect("/home")
+
+            else:
+                print("Please fill all information")
+                return render(request, 'career/signup.html')
+
+
+
+
+
 
 
 """
