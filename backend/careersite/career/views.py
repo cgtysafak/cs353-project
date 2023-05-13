@@ -28,7 +28,7 @@ class LoginView(View):
 
     def post(self, request):
         username = request.POST.get("username", "")
-        password = request.POST.GET("password", "")
+        password = request.POST.get("password", "")
 
         try:
             statement = "SELECT * FROM User Where username= " + username + "AND password " + password + ";"
@@ -49,9 +49,11 @@ class LoginView(View):
                 # return JsonResponse(context)
                 return HttpResponseRedirect("/home")
         else:
-            return render(request, 'career/Login.html')
+            return render(request, 'career/login.html')
 
-
+class SignUpView(View):
+    def get(self, request):
+        return render(request, 'career/signup.html')
 
 
 """
