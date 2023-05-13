@@ -1,0 +1,7 @@
+
+her bir user için signup yapılacak
+
+loginde success veya fail durumunda mesaj ver
+
+
+        
