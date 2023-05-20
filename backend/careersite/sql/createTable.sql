@@ -1,29 +1,24 @@
-
-
-DROP TABLE if EXISTS User;
-DROP TABLE if EXISTS Admin;
-DROP TABLE if EXISTS NonAdmin;
-DROP TABLE if EXISTS RegularUser;
-DROP TABLE if EXISTS Recruiter;
-DROP TABLE if EXISTS CareerExpert;
-DROP TABLE if EXISTS Report;
-DROP TABLE if EXISTS Experience;
-DROP TABLE if EXISTS Employment;
-DROP TABLE if EXISTS Education;
-DROP TABLE if EXISTS CareerGrade;
-DROP TABLE if EXISTS Company;
-DROP TABLE if EXISTS Job;
-DROP TABLE if EXISTS Post;
-DROP TABLE if EXISTS Comment;
-DROP TABLE if EXISTS Message;
-DROP TABLE if EXISTS Notification;
-DROP TABLE if EXISTS Connection;
-DROP TABLE if EXISTS Blocked;
-DROP TABLE if EXISTS Application;
-DROP TABLE if EXISTS Chat;
-
-
-
+DROP TABLE IF EXISTS Admin;
+DROP TABLE IF EXISTS RegularUser;
+DROP TABLE IF EXISTS Recruiter;
+DROP TABLE IF EXISTS CareerExpert;
+DROP TABLE IF EXISTS NonAdmin;
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Report;
+DROP TABLE IF EXISTS Experience;
+DROP TABLE IF EXISTS Employment;
+DROP TABLE IF EXISTS Education;
+DROP TABLE IF EXISTS CareerGrade;
+DROP TABLE IF EXISTS Company;
+DROP TABLE IF EXISTS Job;
+DROP TABLE IF EXISTS Post;
+DROP TABLE IF EXISTS Comment;
+DROP TABLE IF EXISTS Message;
+DROP TABLE IF EXISTS Notification;
+DROP TABLE IF EXISTS Connection;
+DROP TABLE IF EXISTS Blocked;
+DROP TABLE IF EXISTS Application;
+DROP TABLE IF EXISTS Chat;
 
 CREATE TABLE User(
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -221,18 +216,3 @@ VALUES
     ('John Doe', 'johndoe', 'password123', 'johndoe@example.com', 'https://example.com/johndoe.jpg', '2023-05-13 10:30:00', 'RegularUser'),
     ('Jane Smith', 'janesmith', 'letmein', 'janesmith@example.com', 'https://example.com/janesmith.jpg', '2023-05-14 15:45:00', 'Recruiter'),
     ('Robert Johnson', 'robjohnson', 'secret123', 'robjohnson@example.com', NULL, '2023-05-15 09:00:00', 'RegularUser');
-
-
-
-
-
-
-
-
-	
-
-
-
-
-
-
