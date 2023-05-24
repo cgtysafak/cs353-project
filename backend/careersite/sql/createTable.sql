@@ -58,7 +58,7 @@ CREATE TABLE Recruiter(
 
 CREATE TABLE CareerExpert(
     user_id INTEGER PRIMARY KEY,
-    FOREIGN KEY(user_id) REFERENCES RegularUser(user_id)
+    FOREIGN KEY(user_id) REFERENCES NonAdmin(user_id)
 );
 
 CREATE TABLE Report(
@@ -132,7 +132,7 @@ CREATE TABLE Job(
     job_requirements VARCHAR(1023),
     description VARCHAR(1023),
     PRIMARY KEY (company_id, job_id),
-    FOREIGN KEY (company_id) REFERENCES Company (company_id),
+    FOREIGN KEY (company_id) REFERENCES Company(company_id),
     FOREIGN KEY (recruiter_id) REFERENCES Recruiter(user_id)
 );
 
@@ -210,9 +210,34 @@ CREATE TABLE Chat(
     FOREIGN KEY(user_id2) REFERENCES NonAdmin(user_id)
 );
 
-
-INSERT INTO User (full_name, username, password, email_address, dp_url, date_of_registration, user_type)
+INSERT INTO User(full_name, username, password, email_address, dp_url, date_of_registration, user_type)
 VALUES
     ('John Doe', 'johndoe', 'password123', 'johndoe@example.com', 'https://example.com/johndoe.jpg', '2023-05-13 10:30:00', 'RegularUser'),
     ('Jane Smith', 'janesmith', 'letmein', 'janesmith@example.com', 'https://example.com/janesmith.jpg', '2023-05-14 15:45:00', 'Recruiter'),
-    ('Robert Johnson', 'robjohnson', 'secret123', 'robjohnson@example.com', NULL, '2023-05-15 09:00:00', 'RegularUser');
+    ('Robert Johnson', 'robjohnson', 'secret123', 'robjohnson@example.com', NULL, '2023-05-15 09:00:00', 'RegularUser'),
+    ('Adison Miner', 'admin', 'admin123', 'admin@example.com', NULL, '2023-05-24 20:15:00', 'Admin'),
+    ('Jake Ray', 'jakeray', 'hello987', 'jaker@example.com', 'https://example.com/jaker.jpg', '2023-01-09 22:33:44', 'Career Expert');
+
+INSERT INTO Admin(user_id)
+VALUES
+    (4);
+
+INSERT INTO NonAdmin(user_id, birth_date, profession, skills)
+VALUES
+    (1, '1985-07-17', 'Junior Programmer', 'Python, Java, C#, Ruby, Swift'),
+    (2, '1974-11-28', 'Human Resources', 'Finance, Business' ),
+    (3, '2000-06-09', 'Professor', 'Machine Engineering, Statistics'),
+    (5, '1989-03-13', 'Career Expert', 'Career Advisor');
+
+INSERT INTO RegularUser(user_id, portfolio_url, avg_career_grd)
+VALUES
+    (1, 'https://example.com/janesmith.pdf', 97.89),
+    (3, 'https://example.com/robj.pdf', 85.324 );
+
+INSERT INTO Recruiter(user_id)
+VALUES
+    (2);
+
+INSERT INTO CareerExpert(user_id)
+VALUES
+    (5);

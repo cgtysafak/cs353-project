@@ -17,4 +17,5 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name="logout"),
     path('signup/', views.SignUpView.as_view(), name="signup"),
      path('joblist/', views.JobListingsView.as_view(), name="joblist"),
+     path('jobdescription/<int:job_id>/', views.JobDescriptionView.as_view(), name="jobdescription"),
 ]

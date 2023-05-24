@@ -137,9 +137,16 @@ class JobListingsView(View):
         jobs = cursor.fetchall()
         cursor.close()
 
-
         return render(request, 'career/joblist.html', {'jobs': jobs})
 
+class JobDescriptionView(View):
+    def get( self, request, job_id ):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Job WHERE job_id = %s;", [job_id])
+        job = cursor.fetchall()
+        cursor.close()
+
+        return render(request, 'career/jobdescription.html', {'job': job})
 
 #class ExperienceView(View):
 
