@@ -199,7 +199,7 @@ CREATE TABLE Application(
     cv_url VARCHAR(255),
     PRIMARY KEY(user_id, job_id),
     FOREIGN KEY(user_id) REFERENCES NonAdmin(user_id),
-    FOREIGN KEY(job_id) REFERENCES Company(job_id)
+    FOREIGN KEY(job_id) REFERENCES Company(company_id)
 );
 
 CREATE TABLE Chat( 
