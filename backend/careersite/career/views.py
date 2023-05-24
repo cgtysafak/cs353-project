@@ -150,6 +150,60 @@ class JobDescriptionView(View):
 
 #class ExperienceView(View):
 
+class PostListView(View):
+    def get(self, request):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Post;")
+        posts = cursor.fetchall()
+        cursor.close()
+
+        return render(request, 'career/post_list.html', {'posts': posts})
+
+
+class AddPostView(View):
+    def get(self, request):
+        cursor = connection.cursor()
+        return render(request, 'career/add_post.html')
+
+    def post(self, request):
+        user_id = request.session['user_id']
+        text = request.POST.get("text", "")
+        if text != "":
+            date = datetime.now() + timedelta(hours=3)
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO Post(user_id, TEXT, date) VALUES(%s);", user_id, text, date)
+            cursor.close()
+            connection.commit()
+            messages.success(request, "Message is added")
+            return redirect('/postlist')
+        return render(request, 'career/add_post.html')
+
+
+class DeletePostView(View):
+    def post(self, request, post_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_id FROM Post WHERE post_id = " + post_id + "")
+        cursor.close()
+        post_user_id = cursor.fetchone()
+        if post_user_id != user_id:
+            messages.error(request, "You are not permitted to delete this post")
+
+        else:
+            cursor.execute('DELETE FROM Post WHERE post_id = %s', (post_id,))
+            cursor.commit()
+            cursor.close()
+
+        return redirect("/postlist")
+
+
+
+
+
+
+
+
+
 """
 def login(request):
     if request.method == 'POST':
