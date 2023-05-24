@@ -9,10 +9,12 @@ from django.contrib import messages
 
 # Create your views here.
 
+
 class HomeView(View):
     def get(self, request):
         user_type = request.session['user_type']
         return render(request, 'career/home.html', {'user_type': user_type})
+
 
 class UsersView(View):
     def get(self, request):
@@ -23,6 +25,7 @@ class UsersView(View):
         cursor.close()
 
         return render(request, 'career/users.html', {'users': users})
+
 
 class LoginView(View):
     def get(self, request):
@@ -71,8 +74,7 @@ class SignUpView(View):
         user_type = request.POST.get("usertype", "")
         registration_time = datetime.now() + timedelta(hours=3)
 
-
-        if(password != passwordver):
+        if password != passwordver:
             print("passwords are not same")
             return render(request, 'career/signup.html')
         else:
@@ -139,6 +141,7 @@ class JobListingsView(View):
 
         return render(request, 'career/joblist.html', {'jobs': jobs})
 
+
 class JobDescriptionView(View):
     def get( self, request, job_id ):
         cursor = connection.cursor()
@@ -148,8 +151,8 @@ class JobDescriptionView(View):
 
         return render(request, 'career/jobdescription.html', {'job': job})
 
-#class ExperienceView(View):
 
+# #######  POST AND COMMENT VİEWS (ADD, DELETE, LİST)   ###############
 class PostListView(View):
     def get(self, request):
         cursor = connection.cursor()
@@ -171,7 +174,7 @@ class AddPostView(View):
         if text != "":
             date = datetime.now() + timedelta(hours=3)
             cursor = connection.cursor()
-            cursor.execute("INSERT INTO Post(user_id, TEXT, date) VALUES(%s);", user_id, text, date)
+            cursor.execute("INSERT INTO Post(user_id, TEXT, date) VALUES(%s, %s, %s);", user_id, text, date)
             cursor.close()
             connection.commit()
             messages.success(request, "Message is added")
@@ -184,12 +187,13 @@ class DeletePostView(View):
         user_id = request.session['user_id']
         cursor = connection.cursor()
         cursor.execute("SELECT user_id FROM Post WHERE post_id = " + post_id + "")
-        cursor.close()
         post_user_id = cursor.fetchone()
+        cursor.close()
         if post_user_id != user_id:
             messages.error(request, "You are not permitted to delete this post")
 
         else:
+            cursor = connection.cursor()
             cursor.execute('DELETE FROM Post WHERE post_id = %s', (post_id,))
             cursor.commit()
             cursor.close()
@@ -197,41 +201,60 @@ class DeletePostView(View):
         return redirect("/postlist")
 
 
+class PostDetailView(View):
+    def get(self, request, post_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Post WHERE post_id = " + post_id + "")
+        post = cursor.fetchone()
+        cursor.close()
+
+        # get all comments which belong to chosen post
+        cursor.execute("SELECT * FROM Comment WHERE post_id = " + post_id + "")
+        comments = cursor.fetchall()
+        cursor.close()
+
+        context = {'user_id': user_id, 'post':post, 'comments': comments}
+        return render(request, 'career/post_detail.html', context)
+
+    # for comment section
+    def post(self, request, post_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_id FROM Post WHERE post_id = " + post_id + "")
+        post = cursor.fetchone()
+        cursor.close()
+
+        # get all comments which belong to chosen post
+        cursor.execute("SELECT * FROM Comment WHERE post_id = " + post_id + "")
+        comments = cursor.fetchall()
+        cursor.close()
+
+        content = request.POST.get("content", "")
+        date = datetime.now() + timedelta(hours=3)
+
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO Comment(user_id, post_id, CONTENT, date) VALUES(%s, %s, %s, );",
+                       user_id, post_id, content, date)
+        cursor.commit()
+        cursor.close()
+
+        context = {'user_id': user_id, 'post': post, 'comments': comments}
+        return render(request, 'career/post_detail.html', context)
+
+
+# #######################################################################################################
+
+# EXPERIENCES AND USER VİEW PART #
+class PostListView(View):
+    def get(self, request):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Experience WHERE user_id = " + user_id + "")
+        experiences = cursor.fetchall()
+        cursor.close()
+
+        return render(request, 'career/post_list.html', {'experiences': experiences})
 
 
 
-
-
-
-
-"""
-def login(request):
-    if request.method == 'POST':
-        # get username and password from front-end
-        post = request.POST
-        username = request.POST.get("username", "")
-        password = request.POST.get("password", "")
-        t = request.POST.get("type", "")
-        # check if user exists if exists and password is correct send to index, if not show a warning
-        try:
-            stmt = "SELECT u_id, username, pw FROM " + t + " WHERE username = '" + username + "' AND pw = '" + password +"'"
-            cursor = connection.cursor()
-            cursor.execute(stmt)
-            r = cursor.fetchone()
-            cursor.close()
-        except:
-            print("db not exist")
-            return render(request, 'travel/Login.html')
-
-
-        if (r != None):
-            request.session['username'] = username
-            request.session['u_id'] = r[0]
-            request.session[t] = True
-            request.session['type'] = t
-            return HttpResponseRedirect("/")
-        else:
-            return render(request, 'travel/Login.html')
-    else:
-        return render(request, 'travel/Login.html')
-"""

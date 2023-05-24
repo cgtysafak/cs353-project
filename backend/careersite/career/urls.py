@@ -22,3 +22,6 @@ urlpatterns = [
     path('deletepost/<int:post_id>', views.DeletePostView.as_view(), name="delete_name"),
 
 ]
+
+
+
