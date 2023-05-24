@@ -245,8 +245,10 @@ class PostDetailView(View):
 
 # #######################################################################################################
 
-# EXPERIENCES AND USER VİEW PART #
-class PostListView(View):
+# EXPERIENCES AND EDUCATION VİEW PART #
+
+'''
+class ExperienceListView(View):
     def get(self, request):
         user_id = request.session['user_id']
         cursor = connection.cursor()
@@ -254,7 +256,23 @@ class PostListView(View):
         experiences = cursor.fetchall()
         cursor.close()
 
-        return render(request, 'career/post_list.html', {'experiences': experiences})
+        return render(request, 'career/experience_list.html', {'experiences': experiences})
+'''
+
+
+class AddExperience(View):
+    def get(self, request):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        return render(request, 'career/add_experience.html')
+
+
+
+
+
+
+
+
 
 
 

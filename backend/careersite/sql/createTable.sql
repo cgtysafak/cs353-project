@@ -75,6 +75,7 @@ CREATE TABLE Report(
 CREATE TABLE Experience(
     experience_id INTEGER PRIMARY KEY,
     user_id INT NOT NULL,
+    title VARCHAR(100),
     description TEXT,
     start_date DATETIME NOT NULL,
     end_date DATETIME,
