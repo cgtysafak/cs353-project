@@ -1,11 +1,11 @@
+DROP TABLE IF EXISTS Report;
 DROP TABLE IF EXISTS Admin;
 DROP TABLE IF EXISTS RegularUser;
 DROP TABLE IF EXISTS Recruiter;
 DROP TABLE IF EXISTS CareerExpert;
+DROP TABLE IF EXISTS Experience;
 DROP TABLE IF EXISTS NonAdmin;
 DROP TABLE IF EXISTS User;
-DROP TABLE IF EXISTS Report;
-DROP TABLE IF EXISTS Experience;
 DROP TABLE IF EXISTS Employment;
 DROP TABLE IF EXISTS Education;
 DROP TABLE IF EXISTS CareerGrade;
@@ -241,3 +241,15 @@ VALUES
 INSERT INTO CareerExpert(user_id)
 VALUES
     (5);
+
+INSERT INTO Report(report_id, report_url, start_date, location, job_type, user_type, creator_id)
+VALUES 
+    (1, 'https://example.com/report.pdf', '2023-02-25 14:32:56', 'Ankara', 'Part-Time', 'Regular User', 4);
+
+INSERT INTO Experience(experience_id, user_id, description, start_date, end_date)
+VALUES
+    (1, 1, 'Job at Microsoft', '2019-08-30', '2022-04-04'),
+    (2, 2, 'Job at Apple', '2022-07-25', '2023-02-01'),
+    (3, 2, 'Job at Google', '2016-04-29', '2023-05-06'),
+    (4, 3, 'Internship at Intel', '2022-09-18', '2022-10-25'),
+    (5, 5, 'Job at Apple', '2005-01-13', '2018-03-23');
