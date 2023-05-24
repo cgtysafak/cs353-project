@@ -129,6 +129,16 @@ class LogoutView(View):
     def get(self, request):
         request.session.flush()
         return HttpResponseRedirect("/")
+    
+class JobListingsView(View):
+    def get( self, request ):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Job;")
+        jobs = cursor.fetchall()
+        cursor.close()
+
+
+        return render(request, 'career/joblist.html', {'jobs': jobs})
 
 
 #class ExperienceView(View):

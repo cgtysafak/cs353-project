@@ -1,0 +1,34 @@
+{% block content %}
+<html>
+    <head>
+        <title>Job Listings</title>
+    </head>
+    <body>
+        <h1>Jobs Listings</h1>
+
+
+        <div>
+            <table>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Profession</th>
+                    <th>Location</th>
+                    <th>Requirements</th>
+                </tr>
+
+
+                {% for job in jobs %}
+                <tr>
+                    <td>{{job.3}}</td>
+                    <td>{{job.0}}</td>
+                    <td>{{job.5}}</td>
+                    <td>{{job.6}}</td>
+                    <td>{{job.7}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </body>
+</html>
+{% endblock %}
