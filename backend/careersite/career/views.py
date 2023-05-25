@@ -13,7 +13,7 @@ class HomeView(View):
             user_type = request.session['user_type']
             username = request.session['username']
             return render(request, 'career/home.html', {'user_type': user_type, 'username': username})
-        return render(request, 'career/home.html', {'user_type': user_type})
+        return HttpResponseRedirect("/login")
 
 
 class UsersView(View):
@@ -128,7 +128,6 @@ class SignUpView(View):
                 print("Please fill all information")
                 return render(request, 'career/signup.html')
 
-
 class LogoutView(View):
     def get(self, request):
         request.session.flush()
@@ -163,7 +162,6 @@ class PostListView(View):
         cursor.close()
 
         return render(request, 'career/post_list.html', {'posts': posts})
-
 
 class AddPostView(View):
     def get(self, request):
