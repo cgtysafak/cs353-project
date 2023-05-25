@@ -7,12 +7,12 @@ from datetime import datetime, timedelta
 from django.shortcuts import redirect
 from django.contrib import messages
 
-# Create your views here.
-
-
 class HomeView(View):
     def get(self, request):
-        user_type = request.session['user_type']
+        if 'username' in request.session:
+            user_type = request.session['user_type']
+            username = request.session['username']
+            return render(request, 'career/home.html', {'user_type': user_type, 'username': username})
         return render(request, 'career/home.html', {'user_type': user_type})
 
 

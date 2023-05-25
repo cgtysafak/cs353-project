@@ -29,7 +29,15 @@
                     {% endif %}
                 </td>
                 <td>{{ user.6 }}</td>
-                <td>User Type (TODO)</td>
+                <td>
+                    {% if user.7 == "RegularUser" %}
+                        Regular User
+                    {% elif user.7 %}
+                        {{ user.7 }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
