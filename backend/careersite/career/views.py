@@ -118,10 +118,10 @@ class SignUpView(View):
 
                 request.session['username'] = username
                 request.session['user_id'] = user_id
-                request.session['type'] = user_type
+                request.session['user_type'] = user_type
 
                 print("user is successfully created")
-                return HttpResponseRedirect("/home")
+                return HttpResponseRedirect("/login")
             else:
                 print("Please fill all information")
                 return render(request, 'career/signup.html')
