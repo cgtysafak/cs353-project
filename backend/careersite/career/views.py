@@ -116,9 +116,11 @@ class SignUpView(View):
                     cursor.close()
                     connection.commit()
 
-                request.session['username'] = username
-                request.session['user_id'] = user_id
-                request.session['user_type'] = user_type
+                # These are required if we want to redirect to home page after signup
+                # 
+                # request.session['username'] = username
+                # request.session['user_id'] = user_id
+                # request.session['user_type'] = user_type
 
                 print("user is successfully created")
                 return HttpResponseRedirect("/login")
