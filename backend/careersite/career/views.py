@@ -171,14 +171,16 @@ class AddPostView(View):
     def post(self, request):
         user_id = request.session['user_id']
         text = request.POST.get("text", "")
+        title = request.POST.get("title","")
         if text != "":
             date = datetime.now() + timedelta(hours=3)
             cursor = connection.cursor()
-            cursor.execute("INSERT INTO Post(user_id, TEXT, date) VALUES(%s, %s, %s);", user_id, text, date)
+            cursor.execute("INSERT INTO Post(user_id, title, TEXT, date) VALUES(%s, %s, %s, %s);",
+                           user_id, title, text, date)
             cursor.close()
             connection.commit()
             messages.success(request, "Message is added")
-            return redirect('/postlist')
+            return redirect('/post-list')
         return render(request, 'career/add_post.html')
 
 
@@ -198,7 +200,7 @@ class DeletePostView(View):
             cursor.commit()
             cursor.close()
 
-        return redirect("/postlist")
+        return redirect("/post-list")
 
 
 class PostDetailView(View):

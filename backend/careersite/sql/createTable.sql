@@ -140,6 +140,7 @@ CREATE TABLE Job(
 CREATE TABLE Post(
     post_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
+    title VARCHAR(100),
     content TEXT,
     date DATETIME,
     FOREIGN KEY (user_id) REFERENCES NonAdmin(user_id)

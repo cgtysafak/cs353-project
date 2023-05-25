@@ -16,11 +16,11 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name="login"),
     path('logout/', views.LogoutView.as_view(), name="logout"),
     path('signup/', views.SignUpView.as_view(), name="signup"),
-    path('joblist/', views.JobListingsView.as_view(), name="job_list"),
-    path('postlist/', views.PostListView.as_view(), name="post_list"),
-    path('addpost/', views.AddPostView.as_view(), name="add_post"),
-    path('deletepost/<int:post_id>', views.DeletePostView.as_view(), name="delete_name"),
-    path('postdetail/<int:post_id>', views.PostDetailView.as_view(), name="post detail"),
+    path('job-list/', views.JobListingsView.as_view(), name="job_list"),
+    path('post-list/', views.PostListView.as_view(), name="post_list"),
+    path('add-post/', views.AddPostView.as_view(), name="add_post"),
+    path('delete-post/<int:post_id>', views.DeletePostView.as_view(), name="delete_name"),
+    path('post-detail/<int:post_id>', views.PostDetailView.as_view(), name="post_detail"),
 
 ]
 
