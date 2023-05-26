@@ -160,25 +160,28 @@ class PostListView(View):
         cursor.execute("SELECT * FROM Post;")
         posts = cursor.fetchall()
         cursor.close()
+        
+        user_id = request.session['user_id']
 
-        return render(request, 'career/post_list.html', {'posts': posts})
+        return render(request, 'career/post_list.html', {'posts': posts, 'user_id': user_id})
 
 class AddPostView(View):
     def get(self, request):
-        cursor = connection.cursor()
+        # cursor = connection.cursor()
+        # cursor.close()
         return render(request, 'career/add_post.html')
 
     def post(self, request):
         user_id = request.session['user_id']
-        text = request.POST.get("text", "")
+        content = request.POST.get("content", "")
         title = request.POST.get("title","")
-        if text != "":
+        if content != "":
             date = datetime.now() + timedelta(hours=3)
             cursor = connection.cursor()
-            cursor.execute("INSERT INTO Post(user_id, title, TEXT, date) VALUES(%s, %s, %s, %s);",
-                           user_id, title, text, date)
-            cursor.close()
+            cursor.execute("INSERT INTO Post(user_id, title, content, date) VALUES(%s, %s, %s, %s);",
+                           (user_id, title, content, date));
             connection.commit()
+            cursor.close()
             messages.success(request, "Message is added")
             return redirect('/post-list')
         return render(request, 'career/add_post.html')
