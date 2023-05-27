@@ -157,7 +157,7 @@ class JobDescriptionView(View):
 class PostListView(View):
     def get(self, request):
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Post;")
+        cursor.execute("SELECT * FROM Post NATURAL JOIN User;")
         posts = cursor.fetchall()
         cursor.close()
         
@@ -244,7 +244,26 @@ class PostDetailView(View):
         cursor.close()
 
         context = {'user_id': user_id, 'post': post, 'comments': comments}
-        return render(request, 'career/post_detail.html', context)
+        return redirect('post-detail', post_id=post_id)
+
+
+class DeleteCommentView(View):
+    def post(self, request, post_id, comment_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_id FROM Comment WHERE post_id = " + post_id + " AND comment_id =" + comment_id )
+        comment_user_id = cursor.fetchone()
+        cursor.close()
+        if comment_user_id != user_id:
+            messages.error(request, "You are not permitted to delete this post")
+
+        else:
+            cursor = connection.cursor()
+            cursor.execute('DELETE FROM Comment WHERE post_id = %s AND comment_id = %s', (post_id, comment_id))
+            cursor.commit()
+            cursor.close()
+
+        return redirect('post-detail', post_id=post_id)
 
 
 # #######################################################################################################
