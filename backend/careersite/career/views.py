@@ -205,7 +205,6 @@ class DeletePostView(View):
 
         return redirect("/post-list")
 
-
 class PostDetailView(View):
     def get(self, request, post_id):
         user_id = request.session['user_id']

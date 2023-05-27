@@ -5,21 +5,26 @@
 <div class="h-100 d-flex align-items-center justify-content-center mt-5">
     {% comment %} <p>All posts: <b>{{ posts }}</b></p> {% endcomment %}
     <div>
-        {% for post in posts %}
-            <tr>
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">User Id: {{post.1}}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{post.2}}</h6>
-                        <p class="card-text">{{post.3}}</p>
-                        <a href="#" class="card-link">Add Comment</a>
-                        {% if post.1 == user_id %}
-                            <a href="#" class="card-link">Delete</a>
-                        {% endif %}
+        {% if posts %}
+            <p>There are currently <b>{{ posts.length }}</b> posts in the system!</p>
+            {% for post in posts %}
+                <tr>
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">User Id: {{post.1}}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{post.2}}</h6>
+                            <p class="card-text">{{post.3}}</p>
+                            <a href="#" class="card-link">Add Comment</a>
+                            {% if post.1 == user_id %}
+                                <a href="#" class="card-link">Delete</a>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            </tr>
-        {% endfor %}
+                </tr>
+            {% endfor %}
+        {% else %}
+            <p>There are currently no posts in the system!</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
