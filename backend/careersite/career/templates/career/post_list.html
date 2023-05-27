@@ -13,9 +13,13 @@
                             <hr/>
                             <p class="card-text">{{post.3}}</p>
                             <hr/>
-                            <a href="/post-detail/{{post.0}}" class="card-link">Add Comment</a>
+                            <button class="btn btn-outline-primary btn-sm" onclick="location.href='/post-detail/{{post.0}}'" type="button">
+                                View Details
+                            </button>
                             {% if post.1 == user_id %}
-                                <a href="/delete-post/{{post.0}}" class="card-link text-danger">Delete</a>
+                                <button class="btn btn-outline-danger btn-sm" onclick="location.href='/delete-post/{{post.0}}'" type="button">
+                                    Delete
+                                </button>
                             {% endif %}
                         </div>
                     </div>

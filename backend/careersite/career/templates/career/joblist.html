@@ -8,11 +8,10 @@
         <thead>
             <tr>
                 <th>Job Title</th>
-                <th>Company</th>
+                <th>Company ID</th>
                 <th>Profession</th>
                 <th>Location</th>
                 <th>Requirements</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -24,7 +23,7 @@
                 <td>{{job.6}}</td>
                 <td>{{job.7}}</td>
                 <td>
-                    <button class="btn btn-outline-primary btn-sm" type="button">
+                    <button class="btn btn-outline-primary btn-sm" onclick="location.href='/job-detail/{{post.2}}'" type="button">
                         View Details
                     </button>
                 </td>
