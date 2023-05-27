@@ -299,7 +299,8 @@ class PostDetailView(View):
         cursor.close()
 
         # get all comments which belong to chosen post
-        cursor.execute("SELECT * FROM Comment WHERE post_id =% ", [post_id])
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Comment WHERE post_id =%s ", [post_id])
         comments = cursor.fetchall()
         cursor.close()
 
@@ -307,13 +308,13 @@ class PostDetailView(View):
         date = datetime.now() + timedelta(hours=3)
 
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO Comment(user_id, post_id, CONTENT, date) VALUES(%s, %s, %s, );",
-                       user_id, post_id, content, date)
-        cursor.commit()
+        cursor.execute("INSERT INTO Comment(user_id, post_id, CONTENT, date) VALUES(%s, %s, %s, %s);",
+                       (user_id, post_id, content, date))
+        connection.commit()
         cursor.close()
 
         context = {'user_id': user_id, 'post': post, 'comments': comments}
-        return redirect('post-detail', post_id=post_id)
+        return redirect("post-detail", post_id=post_id)
 
 
 class DeleteCommentView(View):

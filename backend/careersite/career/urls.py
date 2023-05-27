@@ -20,7 +20,7 @@ urlpatterns = [
     path('post-list/', views.PostListView.as_view(), name="post_list"),
     path('add-post/', views.AddPostView.as_view(), name="add_post"),
     path('delete-post/<int:post_id>', views.DeletePostView.as_view(), name="delete-post"),
-    path('post-detail/<int:post_id>', views.PostDetailView.as_view(), name="post_detail"),
+    path('post-detail/<int:post_id>', views.PostDetailView.as_view(), name="post-detail"),
     path('delete-comment/<int:post_id>/<int:comment_id>', views.DeleteCommentView.as_view(), name="delete_comment"),
     path('create-job/', views.JobCreationView.as_view(), name="create_job"),
 

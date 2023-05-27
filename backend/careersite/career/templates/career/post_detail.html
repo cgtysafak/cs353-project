@@ -1,0 +1,53 @@
+{% extends 'career/baseauth.html' %}
+
+{% block content %}
+<div class="h-100 d-flex align-items-center justify-content-center mt-5">
+    <div>
+        {% if post %}
+            <tr>
+                <div class="card" style="width: 48rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{post.5}} <span class="text-muted">@{{post.6}}</span></h5>
+                        <p class="card-subtitle mb-2 text-muted">Date: {{post.4}}</p>
+                        <hr/>
+                        <p class="card-text">{{post.3}}</p>
+                        {% if post.1 == user_id %}
+                            <button class="btn btn-outline-danger btn-sm" onclick="location.href='/delete-post/{{post.0}}'" type="button">
+                                Delete
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </tr>
+            <br>
+            {% for comment in comments %}
+            <div class="card" style="width: 48rem;">
+                <p> {{comment.3}} </p>
+                <p class="card-subtitle mb-2 text-muted"> Date: {{comment.4}} </p>
+            </div>
+            <br>
+            {% endfor %}
+            <form method="post" action="/post-detail/{{post.0}}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="content" >Content: </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="content"
+                    name="content"
+                    style="max-width: 500px; margin: margin-left; rows: 3;"
+                    required
+                >
+            </div>
+        <br>
+        <button type="submit" class="btn btn-primary">ADD POST</button>
+        <a href="/post-detail/{{post.0}}" style="margin-left: 30px;">Cancel</a>
+    </form>
+        {% else %}
+            <p>There are currently no posts in the system!</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
