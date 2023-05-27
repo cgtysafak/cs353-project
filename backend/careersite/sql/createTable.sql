@@ -147,12 +147,13 @@ CREATE TABLE Post(
     FOREIGN KEY (user_id) REFERENCES NonAdmin(user_id)
 );
 
-CREATE TABLE Comment(
-    comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE Comment (
+    comment_id INTEGER,
+    post_id INTEGER,
     user_id INTEGER NOT NULL,
-    post_id INTEGER NOT NULL,
     content TEXT,
     date DATETIME,
+    PRIMARY KEY (comment_id, post_id),
     FOREIGN KEY (user_id) REFERENCES NonAdmin(user_id),
     FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
