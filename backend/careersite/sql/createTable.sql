@@ -124,7 +124,6 @@ BEGIN
 	UPDATE CareerGrade SET grade_id = (SELECT MAX(grade_id) FROM CareerGrade WHERE user_id = NEW.user_id AND expert_id = NEW.expert_id);
 END;
 	
-
 CREATE TABLE Job(
     company_id INTEGER NOT NULL,
     recruiter_id INTEGER NOT NULL,
@@ -284,3 +283,12 @@ VALUES
     (7, 'Harvard University', "Bachelor's Degree", 'Software Engineering', 3.01),
     (8, 'Oxford University', "Bachelor's Degree", 'Computer Science', 2.89);
 
+INSERT INTO CareerGrade(grade_id, user_id, expert_id, grade, feedback_text)
+VALUES
+    (1, 1, 5, 83.72, 'Add more photos.'),
+    (2, 3, 5, 97.64, 'Give more detailed descriptions for experiences.');
+
+INSERT INTO Job(company_id, recruiter_id, job_id, title, due_date, profession, location, job_requirements, description)
+VALUES
+    (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering'),
+    (2, 2, 2, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript, Senior Developer', 'Project Manager for app.');
