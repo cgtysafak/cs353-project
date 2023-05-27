@@ -14,9 +14,9 @@
                             <hr/>
                             <p class="card-text">{{post.3}}</p>
                             <hr/>
-                            <a href="#" class="card-link">Add Comment</a>
+                            <a href="/post-detail/{{post.0}}" class="card-link">Add Comment</a>
                             {% if post.1 == user_id %}
-                                <a href="#" class="card-link text-danger">Delete</a>
+                                <a href="/delete-post/{{post.0}}" class="card-link text-danger">Delete</a>
                             {% endif %}
                         </div>
                     </div>

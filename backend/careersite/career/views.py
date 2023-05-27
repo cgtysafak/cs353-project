@@ -6,6 +6,7 @@ from datetime import date
 from datetime import datetime, timedelta
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.middleware.csrf import get_token
 
 class HomeView(View):
     def get(self, request):
@@ -237,34 +238,39 @@ class AddPostView(View):
 
 
 class DeletePostView(View):
-    def post(self, request, post_id):
+    def get(self, request, post_id):
+        print('deneme')
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT user_id FROM Post WHERE post_id = " + post_id + "")
+        cursor.execute("SELECT user_id FROM Post WHERE post_id = %s;", [post_id])
         post_user_id = cursor.fetchone()
         cursor.close()
-        if post_user_id != user_id:
+
+        csrf_token = get_token(request)
+        headers = {'X-CSRFToken': csrf_token}
+        if post_user_id[0] != user_id:
             messages.error(request, "You are not permitted to delete this post")
 
         else:
             cursor = connection.cursor()
+            print('deneme')
             cursor.execute('DELETE FROM Post WHERE post_id = %s', (post_id,))
-            cursor.commit()
+            connection.commit()
             cursor.close()
 
-        return redirect("/post-list")
-
+        return redirect("/post-list", headers=headers)
 
 class PostDetailView(View):
     def get(self, request, post_id):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Post WHERE post_id = " + post_id + "")
+        cursor.execute("SELECT user_id FROM Post WHERE post_id = %s;", [post_id])
         post = cursor.fetchone()
         cursor.close()
 
         # get all comments which belong to chosen post
-        cursor.execute("SELECT * FROM Comment WHERE post_id = " + post_id + "")
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Comment WHERE post_id = %s", [post_id])
         comments = cursor.fetchall()
         cursor.close()
 
