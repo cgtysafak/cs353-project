@@ -1,9 +1,9 @@
+DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Chat;
 DROP TABLE IF EXISTS Application;
 DROP TABLE IF EXISTS Blocked;
 DROP TABLE IF EXISTS Connection;
 DROP TABLE IF EXISTS Notification;
-DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Comment;
 DROP TABLE IF EXISTS Post;
 DROP TABLE IF EXISTS Job;
@@ -293,11 +293,11 @@ VALUES
     (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering'),
     (2, 2, 2, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript, Senior Developer', 'Project Manager for app.');
 
-INSERT INTO Post(post_id, user_id, title, content, date)
+INSERT INTO Post(user_id, title, content, date)
 VALUES
-    (1, 1, 'New Job!', 'I have a new job.', '2023-03-13 10:32:54'),
-    (2, 2, 'Seminar in Finland', 'I attended the seminar in Finland.', '2023-05-03 23:48:39'),
-    (3, 3, 'Promotion in Company', 'I got a promotion in my company.', '2023-02-25 13:18:57');
+    (1, 'New Job!', 'I have a new job.', '2023-03-13 10:32:54'),
+    (2, 'Seminar in Finland', 'I attended the seminar in Finland.', '2023-05-03 23:48:39'),
+    (3, 'Promotion in Company', 'I got a promotion in my company.', '2023-02-25 13:18:57');
 
 INSERT INTO Comment(comment_id, post_id, user_id, content, date)
 VALUES
@@ -306,3 +306,9 @@ VALUES
     (3, 2, 1, 'I was there too.', '2023-05-04 07:53:17'),
     (4, 3, 2, 'Congratulations', '2023-02-25 16:58:03'),
     (5, 3, 1, 'Congrats on your promotion!', '2023-02-26 06:53:00');
+
+INSERT INTO Connection(user_id1, user_id2, status)
+VALUES
+    (1, 3, 'approved'),
+    (1, 5, 'rejected'),
+    (3, 5, 'waiting');
