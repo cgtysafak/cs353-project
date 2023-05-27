@@ -294,12 +294,12 @@ class PostDetailView(View):
     def post(self, request, post_id):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT user_id FROM Post WHERE post_id = " + post_id + "")
+        cursor.execute("SELECT user_id FROM Post WHERE post_id =%s", [post_id])
         post = cursor.fetchone()
         cursor.close()
 
         # get all comments which belong to chosen post
-        cursor.execute("SELECT * FROM Comment WHERE post_id = " + post_id + "")
+        cursor.execute("SELECT * FROM Comment WHERE post_id =% ", [post_id])
         comments = cursor.fetchall()
         cursor.close()
 
