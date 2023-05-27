@@ -7,10 +7,10 @@ DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Comment;
 DROP TABLE IF EXISTS Post;
 DROP TABLE IF EXISTS Job;
-DROP TABLE IF EXISTS Company;
 DROP TABLE IF EXISTS CareerGrade;
 DROP TABLE IF EXISTS Education;
 DROP TABLE IF EXISTS Employment;
+DROP TABLE IF EXISTS Company;
 DROP TABLE IF EXISTS Experience;
 DROP TABLE IF EXISTS Report;
 DROP TABLE IF EXISTS CareerExpert;
@@ -83,6 +83,13 @@ CREATE TABLE Experience(
     FOREIGN KEY(user_id) REFERENCES NonAdmin(user_id)
 );
 
+CREATE TABLE Company( 
+    company_id INTEGER PRIMARY KEY,
+    location VARCHAR(255),
+    description VARCHAR(1023),
+    name VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE Employment(
     experience_id INTEGER PRIMARY KEY,
     company_id INTEGER NOT NULL,
@@ -115,13 +122,7 @@ CREATE TRIGGER insert_careergrade_id AFTER INSERT ON CareerGrade
 BEGIN
 	UPDATE CareerGrade SET grade_id = (SELECT MAX(grade_id) FROM CareerGrade WHERE user_id = NEW.user_id AND expert_id = NEW.expert_id);
 END;
-
-CREATE TABLE Company( 
-    company_id INTEGER PRIMARY KEY,
-    location VARCHAR(255),
-    description VARCHAR(1023),
-    name VARCHAR(255) NOT NULL
-);	
+	
 
 CREATE TABLE Job(
     company_id INTEGER NOT NULL,
@@ -257,3 +258,20 @@ VALUES
     (3, 2, 'Job at Google', '2016-04-29', '2023-05-06'),
     (4, 3, 'Internship at Intel', '2022-09-18', '2022-10-25'),
     (5, 5, 'Job at Apple', '2005-01-13', '2018-03-23');
+
+INSERT INTO Company(company_id, location, description, name)
+VALUES
+    (1, 'Washington', 'Microsoft is a multinational technology corporation.', 'Microsoft Corporation'),
+    (2, 'Cupertino', 'Apple produces consumer electronics and software.', 'Apple Inc.'),
+    (3, 'California', 'Google is known for internet-related products.', 'Google LLC'),
+    (4, 'California', 'Intel manufactures computer processors and hardware.', 'Intel');
+
+INSERT INTO Employment(experience_id, company_id, profession)
+VALUES
+    (1, 1, 'Junior Software Developer'),
+    (2, 2, 'Project Manager'),
+    (3, 3, 'Data Analyst'),
+    (4, 4, 'Senior Software Developer'),
+    (5, 2, 'Software Engineer');
+
+
