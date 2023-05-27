@@ -31,4 +31,17 @@
         {% endif %}
     </div>
 </div>
+
+<form action="/post-list/" method="get">
+
+  <label for="ordering">Order By:</label>
+  <select name="ordering" id="ordering">
+    <option value="">Default</option>
+    <option value="title">Title</option>
+    <option value="date">Date</option>
+  </select>
+
+  <button type="submit">Filter</button>
+</form>
+
 {% endblock %}

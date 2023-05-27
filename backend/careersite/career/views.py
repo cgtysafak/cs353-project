@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db import connection
+from django.db import connection, connections
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import View
 from datetime import date
@@ -205,14 +205,27 @@ class JobCreationView(View):
 # #######  POST AND COMMENT VİEWS (ADD, DELETE, LİST)   ###############
 class PostListView(View):
     def get(self, request):
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Post NATURAL JOIN User;")
-        posts = cursor.fetchall()
-        cursor.close()
-        
+
+        ordering = request.GET.get('ordering', '')  # Default ordering if not provided
+
         user_id = request.session['user_id']
 
+        query = "SELECT * FROM POST NATURAL JOIN User WHERE 1=1"
+        params = []
+
+        if ordering == 'title':
+            query += " ORDER BY title"
+        elif ordering == 'date':
+            query += " ORDER BY date"
+
+        cursor = connection.cursor()
+        cursor.execute(query, params)
+        posts = cursor.fetchall()
+
+        cursor.close()
+
         return render(request, 'career/post_list.html', {'posts': posts, 'user_id': user_id})
+
 
 
 class AddPostView(View):
