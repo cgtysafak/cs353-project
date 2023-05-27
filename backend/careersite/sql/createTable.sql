@@ -7,10 +7,10 @@ DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Comment;
 DROP TABLE IF EXISTS Post;
 DROP TABLE IF EXISTS Job;
-DROP TABLE IF EXISTS Company;
 DROP TABLE IF EXISTS CareerGrade;
 DROP TABLE IF EXISTS Education;
 DROP TABLE IF EXISTS Employment;
+DROP TABLE IF EXISTS Company;
 DROP TABLE IF EXISTS Experience;
 DROP TABLE IF EXISTS Report;
 DROP TABLE IF EXISTS CareerExpert;
@@ -39,6 +39,7 @@ CREATE TABLE Admin(
 
 CREATE TABLE NonAdmin(
     user_id INTEGER PRIMARY KEY,
+    company_id,
     birth_date DATETIME,
     profession VARCHAR(100),
     skills VARCHAR(1023),
@@ -83,6 +84,13 @@ CREATE TABLE Experience(
     FOREIGN KEY(user_id) REFERENCES NonAdmin(user_id)
 );
 
+CREATE TABLE Company( 
+    company_id INTEGER PRIMARY KEY,
+    location VARCHAR(255),
+    description VARCHAR(1023),
+    name VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE Employment(
     experience_id INTEGER PRIMARY KEY,
     company_id INTEGER NOT NULL,
@@ -115,14 +123,7 @@ CREATE TRIGGER insert_careergrade_id AFTER INSERT ON CareerGrade
 BEGIN
 	UPDATE CareerGrade SET grade_id = (SELECT MAX(grade_id) FROM CareerGrade WHERE user_id = NEW.user_id AND expert_id = NEW.expert_id);
 END;
-
-CREATE TABLE Company( 
-    company_id INTEGER PRIMARY KEY,
-    location VARCHAR(255),
-    description VARCHAR(1023),
-    name VARCHAR(255) NOT NULL
-);	
-
+	
 CREATE TABLE Job(
     company_id INTEGER NOT NULL,
     recruiter_id INTEGER NOT NULL,
@@ -226,12 +227,12 @@ INSERT INTO Admin(user_id)
 VALUES
     (4);
 
-INSERT INTO NonAdmin(user_id, birth_date, profession, skills)
+INSERT INTO NonAdmin(user_id, company_id, birth_date, profession, skills)
 VALUES
-    (1, '1985-07-17', 'Junior Programmer', 'Python, Java, C#, Ruby, Swift'),
-    (2, '1974-11-28', 'Human Resources', 'Finance, Business' ),
-    (3, '2000-06-09', 'Professor', 'Machine Engineering, Statistics'),
-    (5, '1989-03-13', 'Career Expert', 'Career Advisor');
+    (1, 1, '1985-07-17', 'Junior Programmer', 'Python, Java, C#, Ruby, Swift'),
+    (2, 2, '1974-11-28', 'Human Resources', 'Finance, Business' ),
+    (3, 3, '2000-06-09', 'Professor', 'Machine Engineering, Statistics'),
+    (5, 2, '1989-03-13', 'Career Expert', 'Career Advisor');
 
 INSERT INTO RegularUser(user_id, portfolio_url, avg_career_grd)
 VALUES
@@ -256,4 +257,38 @@ VALUES
     (2, 2, 'Job at Apple', '2022-07-25', '2023-02-01'),
     (3, 2, 'Job at Google', '2016-04-29', '2023-05-06'),
     (4, 3, 'Internship at Intel', '2022-09-18', '2022-10-25'),
-    (5, 5, 'Job at Apple', '2005-01-13', '2018-03-23');
+    (5, 5, 'Job at Apple', '2005-01-13', '2018-03-23'), 
+    (6, 1, 'University', '2012-09-12', '2016-06-24'),
+    (7, 2, 'University', '2008-07-27', '2012-05-05'),
+    (8, 3, 'University', '2018-08-29', '2022-06-14');
+
+INSERT INTO Company(company_id, location, description, name)
+VALUES
+    (1, 'Washington', 'Microsoft is a multinational technology corporation.', 'Microsoft Corporation'),
+    (2, 'Cupertino', 'Apple produces consumer electronics and software.', 'Apple Inc.'),
+    (3, 'California', 'Google is known for internet-related products.', 'Google LLC'),
+    (4, 'California', 'Intel manufactures computer processors and hardware.', 'Intel');
+
+INSERT INTO Employment(experience_id, company_id, profession)
+VALUES
+    (1, 1, 'Junior Software Developer'),
+    (2, 2, 'Project Manager'),
+    (3, 3, 'Data Analyst'),
+    (4, 4, 'Senior Software Developer'),
+    (5, 2, 'Software Engineer');
+
+INSERT INTO Education(experience_id, school_name, degree, department, cgpa)
+VALUES
+    (6, 'Bilkent University', "Bachelor's Degree", 'Electrical-Electronics Engineering', 2.92),
+    (7, 'Harvard University', "Bachelor's Degree", 'Software Engineering', 3.01),
+    (8, 'Oxford University', "Bachelor's Degree", 'Computer Science', 2.89);
+
+INSERT INTO CareerGrade(grade_id, user_id, expert_id, grade, feedback_text)
+VALUES
+    (1, 1, 5, 83.72, 'Add more photos.'),
+    (2, 3, 5, 97.64, 'Give more detailed descriptions for experiences.');
+
+INSERT INTO Job(company_id, recruiter_id, job_id, title, due_date, profession, location, job_requirements, description)
+VALUES
+    (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering'),
+    (2, 2, 2, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript, Senior Developer', 'Project Manager for app.');

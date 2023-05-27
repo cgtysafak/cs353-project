@@ -132,7 +132,8 @@ class LogoutView(View):
     def get(self, request):
         request.session.flush()
         return HttpResponseRedirect("/")
-    
+
+# #######  JOB LISTING-DETAILS-APPLY VİEWS  ###############
 class JobListingsView(View):
     def get( self, request ):
         cursor = connection.cursor()
@@ -144,13 +145,60 @@ class JobListingsView(View):
 
 
 class JobDescriptionView(View):
-    def get( self, request, job_id ):
+    def get( self, request, job_id):
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM Job WHERE job_id = %s;", [job_id])
         job = cursor.fetchall()
         cursor.close()
 
         return render(request, 'career/jobdescription.html', {'job': job})
+
+
+# #######  JOB CREATE EDIT DELETE VİEWS  ###############
+class JobCreationView(View):
+    def get(self, request):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM User NATURAL JOIN Recruiter WHERE user_id = %s;", user_id)
+        cursor.close()
+
+        recruiter = cursor.fetchone()
+        if recruiter is None:
+            return redirect('job-list')
+        else:
+            return render(request, 'career/create-job.html')
+
+    def post(self, request):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM NonAdmin NATURAL JOIN Recruiter WHERE user_id = %s;", user_id)
+        cursor.close()
+
+        recruiter = cursor.fetchone()
+        if recruiter is None:
+            return redirect('job-list')
+        else:
+            title = request.POST.get("title", "")
+            due_date = request.POST.get("due_date", "")
+            profession = request.POST.get("profession", "")
+            location = request.POST.get("location", "")
+            job_requirements = request.POST.get("job_requirements", "")
+            description = request.POST.get("description", "")
+
+            if title != "":
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO Job(company_id, recruiter_id, title, due_date, profession, location, "
+                               "job_requirements, description) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);",
+                               (recruiter[1], recruiter[0], title, due_date, profession, location, job_requirements,
+                                description))
+                connection.commit()
+                cursor.close()
+                messages.success(request, "Message is added")
+
+                return redirect('job-list')
+
+            else:
+                return render(request, 'career/create-job.html')
 
 
 # #######  POST AND COMMENT VİEWS (ADD, DELETE, LİST)   ###############
@@ -164,6 +212,7 @@ class PostListView(View):
         user_id = request.session['user_id']
 
         return render(request, 'career/post_list.html', {'posts': posts, 'user_id': user_id})
+
 
 class AddPostView(View):
     def get(self, request):
@@ -204,6 +253,7 @@ class DeletePostView(View):
             cursor.close()
 
         return redirect("/post-list")
+
 
 class PostDetailView(View):
     def get(self, request, post_id):
