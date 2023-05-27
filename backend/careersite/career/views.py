@@ -320,7 +320,7 @@ class DeleteCommentView(View):
     def post(self, request, post_id, comment_id):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT user_id FROM Comment WHERE post_id = " + post_id + " AND comment_id =" + comment_id )
+        cursor.execute("SELECT user_id FROM Comment WHERE post_id = %s  AND comment_id = %s", [post_id, comment_id])
         comment_user_id = cursor.fetchone()
         cursor.close()
         if comment_user_id != user_id:
