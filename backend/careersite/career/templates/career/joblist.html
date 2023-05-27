@@ -1,34 +1,37 @@
+{% extends 'career/baseauth.html' %}
+
 {% block content %}
-<html>
-    <head>
-        <title>Job Listings</title>
-    </head>
-    <body>
-        <h1>Jobs Listings</h1>
 
+<div class="container">
+    <h2 style="margin-top: 20px;">Job List</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Profession</th>
+                <th>Location</th>
+                <th>Requirements</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{job.3}}</td>
+                <td>{{job.0}}</td>
+                <td>{{job.5}}</td>
+                <td>{{job.6}}</td>
+                <td>{{job.7}}</td>
+                <td>
+                    <button class="btn btn-outline-primary btn-sm" type="button">
+                        View Details
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-        <div>
-            <table>
-                <tr>
-                    <th>Job Title</th>
-                    <th>Company</th>
-                    <th>Profession</th>
-                    <th>Location</th>
-                    <th>Requirements</th>
-                </tr>
-
-
-                {% for job in jobs %}
-                <tr>
-                    <td>{{job.3}}</td>
-                    <td>{{job.0}}</td>
-                    <td>{{job.5}}</td>
-                    <td>{{job.6}}</td>
-                    <td>{{job.7}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </body>
-</html>
 {% endblock %}
