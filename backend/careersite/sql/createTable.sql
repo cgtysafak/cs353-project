@@ -159,14 +159,40 @@ CREATE TABLE Comment (
     FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
-CREATE TABLE Message( 
+-- CREATE TABLE Message( 
+--     message_id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     sender_id INT NOT NULL,
+--     receiver_id INT NOT NULL,
+--     content TEXT NOT NULL,
+--     timestamp DATETIME,
+--     FOREIGN KEY (sender_id, receiver_id) REFERENCES Chat(user_id1, user_id2)
+-- );
+
+CREATE TABLE Message(
     message_id INTEGER PRIMARY KEY AUTOINCREMENT,
     sender_id INT NOT NULL,
     receiver_id INT NOT NULL,
     content TEXT NOT NULL,
-    timestamp DATETIME,
-    FOREIGN KEY (sender_id, receiver_id) REFERENCES Chat(user_id1, user_id2)
+    timestamp DATETIME
 );
+
+CREATE TABLE Chat(
+    user_id1 INTEGER NOT NULL,
+    user_id2 INTEGER NOT NULL,
+    PRIMARY KEY(user_id1, user_id2)
+);
+
+CREATE TRIGGER insert_into_chat
+AFTER INSERT ON Message
+FOR EACH ROW
+WHEN (NEW.sender_id <> NEW.receiver_id)
+BEGIN
+    INSERT OR IGNORE INTO Chat(user_id1, user_id2)
+    VALUES (
+        CASE WHEN NEW.sender_id < NEW.receiver_id THEN NEW.sender_id ELSE NEW.receiver_id END,
+        CASE WHEN NEW.sender_id < NEW.receiver_id THEN NEW.receiver_id ELSE NEW.sender_id END
+    );
+END;
 
 CREATE TABLE Notification(
     notification_id INTEGER NOT NULL,
@@ -207,13 +233,13 @@ CREATE TABLE Application(
     FOREIGN KEY(job_id) REFERENCES Company(company_id)
 );
 
-CREATE TABLE Chat( 
-    user_id1 INTEGER NOT NULL,
-    user_id2 INTEGER NOT NULL,
-    PRIMARY KEY(user_id1, user_id2),
-    FOREIGN KEY(user_id1) REFERENCES NonAdmin(user_id),
-    FOREIGN KEY(user_id2) REFERENCES NonAdmin(user_id)
-);
+-- CREATE TABLE Chat( 
+--     user_id1 INTEGER NOT NULL,
+--     user_id2 INTEGER NOT NULL,
+--     PRIMARY KEY(user_id1, user_id2),
+--     FOREIGN KEY(user_id1) REFERENCES NonAdmin(user_id),
+--     FOREIGN KEY(user_id2) REFERENCES NonAdmin(user_id)
+-- );
 
 INSERT INTO User(full_name, username, password, email_address, dp_url, date_of_registration, user_type)
 VALUES
@@ -323,3 +349,16 @@ VALUES
     (3, 1, '2023-05-25 05:12:58', 'I am a computer scientist.', 'https://example.com/robj-cv.pdf'),
     (3, 2, '2023-03-16 13:19:52', 'I worked at Intel for 5 years.', 'https://example.com/robj-cv.pdf'),
     (5, 3, '2023-04-23 12:26:37', 'I am an expert at data science.', 'https://example.com/cvofjakeray.pdf');
+
+INSERT INTO Chat(user_id1, user_id2)
+VALUES
+    (1, 2),
+    (1, 3),
+    (5, 2);
+
+INSERT INTO Message(sender_id, receiver_id, content, timestamp)
+VALUES
+    (1, 2, 'Hello', '2023-05-07 13:10:24'),
+    (2, 1, 'Hi', '2023-05-07 13:10:24'),
+    (1, 3, 'How are you?', '2023-04-03 15:13:49'),
+    (5, 2, 'Can you check my profile?', '2023-05-24 19:41:20');
