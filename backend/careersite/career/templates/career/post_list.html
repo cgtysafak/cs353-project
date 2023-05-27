@@ -9,11 +9,13 @@
             <p>There are currently <b>{{ posts.length }}</b> posts in the system!</p>
             {% for post in posts %}
                 <tr>
-                    <div class="card" style="width: 18rem;">
+                    <div class="card" style="width: 48rem;">
                         <div class="card-body">
                             <h5 class="card-title">User Id: {{post.1}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{post.2}}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">Date: {{post.4}}</h6>
+                            <hr/>
                             <p class="card-text">{{post.3}}</p>
+                            <hr/>
                             <a href="#" class="card-link">Add Comment</a>
                             {% if post.1 == user_id %}
                                 <a href="#" class="card-link">Delete</a>
