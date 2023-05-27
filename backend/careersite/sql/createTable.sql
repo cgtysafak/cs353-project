@@ -257,7 +257,10 @@ VALUES
     (2, 2, 'Job at Apple', '2022-07-25', '2023-02-01'),
     (3, 2, 'Job at Google', '2016-04-29', '2023-05-06'),
     (4, 3, 'Internship at Intel', '2022-09-18', '2022-10-25'),
-    (5, 5, 'Job at Apple', '2005-01-13', '2018-03-23');
+    (5, 5, 'Job at Apple', '2005-01-13', '2018-03-23'), 
+    (6, 1, 'University', '2012-09-12', '2016-06-24'),
+    (7, 2, 'University', '2008-07-27', '2012-05-05'),
+    (8, 3, 'University', '2018-08-29', '2022-06-14');
 
 INSERT INTO Company(company_id, location, description, name)
 VALUES
@@ -274,4 +277,9 @@ VALUES
     (4, 4, 'Senior Software Developer'),
     (5, 2, 'Software Engineer');
 
+INSERT INTO Education(experience_id, school_name, degree, department, cgpa)
+VALUES
+    (6, 'Bilkent University', "Bachelor's Degree", 'Electrical-Electronics Engineering', 2.92),
+    (7, 'Harvard University', "Bachelor's Degree", 'Software Engineering', 3.01),
+    (8, 'Oxford University', "Bachelor's Degree", 'Computer Science', 2.89);
 
