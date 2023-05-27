@@ -312,3 +312,14 @@ VALUES
     (1, 3, 'approved'),
     (1, 5, 'rejected'),
     (3, 5, 'waiting');
+
+INSERT INTO Blocked(user_id1, user_id2)
+VALUES
+    (1, 5);
+
+INSERT INTO Application(user_id, job_id, date, personal_info, cv_url)
+VALUES
+    (1, 1, '2023-05-24 10:20:34', 'My name is John.', 'https://example.com/johndoe-cv.pdf'),
+    (3, 1, '2023-05-25 05:12:58', 'I am a computer scientist.', 'https://example.com/robj-cv.pdf'),
+    (3, 2, '2023-03-16 13:19:52', 'I worked at Intel for 5 years.', 'https://example.com/robj-cv.pdf'),
+    (5, 3, '2023-04-23 12:26:37', 'I am an expert at data science.', 'https://example.com/cvofjakeray.pdf');
