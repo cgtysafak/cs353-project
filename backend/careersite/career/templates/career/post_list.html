@@ -3,22 +3,20 @@
 {% block content %}
 
 <div class="h-100 d-flex align-items-center justify-content-center mt-5">
-    {% comment %} <p>All posts: <b>{{ posts }}</b></p> {% endcomment %}
     <div>
         {% if posts %}
-            <p>There are currently <b>{{ posts.length }}</b> posts in the system!</p>
             {% for post in posts %}
                 <tr>
                     <div class="card" style="width: 48rem;">
                         <div class="card-body">
-                            <h5 class="card-title">User Id: {{post.1}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Date: {{post.4}}</h6>
+                            <h5 class="card-title">{{post.5}} <span class="text-muted">@{{post.6}}</span></h5>
+                            <p class="card-subtitle mb-2 text-muted">Date: {{post.4}}</p>
                             <hr/>
                             <p class="card-text">{{post.3}}</p>
                             <hr/>
                             <a href="#" class="card-link">Add Comment</a>
                             {% if post.1 == user_id %}
-                                <a href="#" class="card-link">Delete</a>
+                                <a href="#" class="card-link text-danger">Delete</a>
                             {% endif %}
                         </div>
                     </div>
