@@ -267,6 +267,7 @@ class DeletePostView(View):
         else:
             cursor = connection.cursor()
             print('deneme')
+            cursor.execute('DELETE FROM Comment WHERE post_id = %s', (post_id,))
             cursor.execute('DELETE FROM Post WHERE post_id = %s', (post_id,))
             connection.commit()
             cursor.close()
