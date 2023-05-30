@@ -146,13 +146,13 @@ class JobListingsView(View):
 
 
 class JobDescriptionView(View):
-    def get( self, request, job_id):
-        cursor = connection.cursor()
+    def get(self, request, job_id):
+        cursor = connection.cursor() 
         cursor.execute("SELECT * FROM Job WHERE job_id = %s;", [job_id])
         job = cursor.fetchall()
         cursor.close()
 
-        return render(request, 'career/jobdescription.html', {'job': job})
+        return render(request, 'career/jobdetails.html', {'job': job})
 
 
 # #######  JOB CREATE EDIT DELETE VİEWS  ###############
@@ -225,8 +225,6 @@ class PostListView(View):
         cursor.close()
 
         return render(request, 'career/post_list.html', {'posts': posts, 'user_id': user_id})
-
-
 
 class AddPostView(View):
     def get(self, request):
@@ -335,6 +333,7 @@ class DeleteCommentView(View):
             cursor.close()
 
         return redirect('post-detail', post_id=post_id)
+
 
 
 # #######################################################################################################
