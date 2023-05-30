@@ -8,7 +8,7 @@
         <thead>
             <tr>
                 <th>Job Title</th>
-                <th>Company ID</th>
+                <th>Company</th>
                 <th>Profession</th>
                 <th>Location</th>
                 <th>Requirements</th>
@@ -17,11 +17,11 @@
         <tbody>
             {% for job in jobs %}
             <tr>
-                <td>{{job.3}}</td>
-                <td>{{job.0}}</td>
-                <td>{{job.5}}</td>
-                <td>{{job.6}}</td>
                 <td>{{job.7}}</td>
+                <td>{{job.3}}</td>
+                <td>{{job.9}}</td>
+                <td>{{job.10}}</td>
+                <td>{{job.11}}</td>
                 <td>
                     <button class="btn btn-outline-primary btn-sm" onclick="location.href='/job-detail/{{post.2}}'" type="button">
                         View Details

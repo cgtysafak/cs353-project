@@ -138,7 +138,7 @@ class LogoutView(View):
 class JobListingsView(View):
     def get( self, request ):
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Job;")
+        cursor.execute("SELECT * FROM Company as C JOIN Job as J WHERE C.company_id = J.company_id")
         jobs = cursor.fetchall()
         cursor.close()
 
@@ -150,9 +150,11 @@ class JobDescriptionView(View):
         cursor = connection.cursor() 
         cursor.execute("SELECT * FROM Job WHERE job_id = %s;", [job_id])
         job = cursor.fetchall()
+        cursor.execute("SELECT name FROM Company as C JOIN Job as J WHERE C.company_id = J.company_id AND J.job_id = %s", [job_id])
+        company = cursor.fetchone()
         cursor.close()
 
-        return render(request, 'career/jobdetails.html', {'job': job})
+        return render(request, 'career/jobdetails.html', {'job': job, 'company': company})
 
 
 # #######  JOB CREATE EDIT DELETE VİEWS  ###############
