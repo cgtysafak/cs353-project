@@ -16,7 +16,6 @@ class HomeView(View):
             return render(request, 'career/home.html', {'user_type': user_type, 'username': username})
         return HttpResponseRedirect("/login")
 
-
 class UsersView(View):
     def get(self, request):
         cursor = connection.cursor()
@@ -141,8 +140,23 @@ class JobListingsView(View):
         cursor.execute("SELECT * FROM Company as C JOIN Job as J WHERE C.company_id = J.company_id")
         jobs = cursor.fetchall()
         cursor.close()
+        
+        cursor = connection.cursor()
+        cursor.execute("SELECT job_id FROM Application WHERE user_id = %s;", [request.session['user_id']])
+        applied_jobs = cursor.fetchall()
+        cursor.close()
+        
+        applied_job_ids = []
+        
+        for applied_job in applied_jobs:
+            applied_job_ids.append(applied_job[0])
+            
 
-        return render(request, 'career/joblist.html', {'jobs': jobs})
+        return render(request, 'career/joblist.html', {
+            'jobs': jobs,
+            'user_type': request.session['user_type'],
+            'applied_job_ids': applied_job_ids,
+        });
 
 
 class JobDescriptionView(View):

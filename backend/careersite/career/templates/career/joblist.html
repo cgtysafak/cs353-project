@@ -4,6 +4,11 @@
 
 <div class="container">
     <h2 style="margin-top: 20px;">Job List</h2>
+    {% if user_type == 'Recruiter' %}
+        <button class="btn btn-outline-primary btn-sm" onclick="location.href='/home'" type="button">
+            Add New Job Opening
+        </button>
+    {% endif %}
     <table class="table table-striped">
         <thead>
             <tr>
@@ -23,8 +28,13 @@
                 <td>{{job.10}}</td>
                 <td>{{job.11}}</td>
                 <td>
-                    <button class="btn btn-outline-primary btn-sm" onclick="location.href='/job-detail/{{post.2}}'" type="button">
-                        View Details
+                    <button
+                        class="btn btn-outline-primary btn-sm"
+                        onclick="location.href='/job-detail/{{post.2}}'"
+                        type="button"
+                        {% if job.6 in applied_job_ids %} disabled {% endif %}
+                    >
+                        {% if job.6 in applied_job_ids %} Already Applied {% else %} View Details {% endif %}
                     </button>
                 </td>
             </tr>

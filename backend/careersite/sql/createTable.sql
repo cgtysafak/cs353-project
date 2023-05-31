@@ -316,7 +316,8 @@ VALUES
 INSERT INTO Job(company_id, recruiter_id, job_id, title, due_date, profession, location, job_requirements, description)
 VALUES
     (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering'),
-    (2, 2, 2, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript, Senior Developer', 'Project Manager for app.');
+    (2, 2, 2, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript, Senior Developer', 'Project Manager for app.'),
+    (2, 2, 3, 'Front-end Developer', '2023-06-06', 'Developer', 'Ankara', 'Bootstrap', 'Front-end developer for DB project.');
 
 INSERT INTO Post(user_id, title, content, date)
 VALUES
