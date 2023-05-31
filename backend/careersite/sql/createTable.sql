@@ -126,14 +126,13 @@ END;
 CREATE TABLE Job(
     company_id INTEGER NOT NULL,
     recruiter_id INTEGER NOT NULL,
-    job_id INTEGER NOT NULL,
+    job_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     title VARCHAR(255),
     due_date DATETIME,
     profession VARCHAR(255),
     location VARCHAR(255),
     job_requirements VARCHAR(1023),
     description VARCHAR(1023),
-    PRIMARY KEY (company_id, job_id),
     FOREIGN KEY (company_id) REFERENCES Company(company_id),
     FOREIGN KEY (recruiter_id) REFERENCES Recruiter(user_id)
 );
