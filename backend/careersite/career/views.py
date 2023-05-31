@@ -235,7 +235,7 @@ class ApplyJob(View):
             connection.commit()
             cursor.close()
             messages.success(request, 'You applied this job successfully')
-            
+
         return redirect('job-list')
 
 # #######  POST AND COMMENT VİEWS (ADD, DELETE, LİST)   ###############

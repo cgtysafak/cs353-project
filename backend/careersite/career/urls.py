@@ -23,7 +23,7 @@ urlpatterns = [
     path('delete-post/<int:post_id>', views.DeletePostView.as_view(), name="delete-post"),
     path('post-detail/<int:post_id>', views.PostDetailView.as_view(), name="post-detail"),
     path('delete-comment/<int:comment_id>', views.DeleteCommentView.as_view(), name="delete-comment"),
-    path('add-job/', views.JobCreationView.as_view(), name="add-job"),
+    path('add-job/', views.AddJobView.as_view(), name="add-job"),
 
 ]
 
