@@ -16,14 +16,14 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name="login"),
     path('logout/', views.LogoutView.as_view(), name="logout"),
     path('signup/', views.SignUpView.as_view(), name="signup"),
-    path('job-list/', views.JobListingsView.as_view(), name="job_list"),
+    path('job-list/', views.JobListingsView.as_view(), name="job-list"),
     path('job-detail/<int:job_id>', views.JobDescriptionView.as_view(), name="job-detail"),
-    path('post-list/', views.PostListView.as_view(), name="post_list"),
-    path('add-post/', views.AddPostView.as_view(), name="add_post"),
+    path('post-list/', views.PostListView.as_view(), name="post-list"),
+    path('add-post/', views.AddPostView.as_view(), name="add-post"),
     path('delete-post/<int:post_id>', views.DeletePostView.as_view(), name="delete-post"),
     path('post-detail/<int:post_id>', views.PostDetailView.as_view(), name="post-detail"),
-    path('delete-comment/<int:comment_id>', views.DeleteCommentView.as_view(), name="delete_comment"),
-    path('create-job/', views.JobCreationView.as_view(), name="create_job"),
+    path('delete-comment/<int:comment_id>', views.DeleteCommentView.as_view(), name="delete-comment"),
+    path('add-job/', views.JobCreationView.as_view(), name="add-job"),
 
 ]
 

@@ -133,6 +133,7 @@ class LogoutView(View):
         request.session.flush()
         return HttpResponseRedirect("/")
 
+
 # #######  JOB LISTING-DETAILS-APPLY VİEWS  ###############
 class JobListingsView(View):
     def get( self, request ):
@@ -169,8 +170,8 @@ class JobDescriptionView(View):
         return render(request, 'career/jobdetails.html', {'job': job})
 
 
-# #######  JOB CREATE EDIT DELETE VİEWS  ###############
-class JobCreationView(View):
+# #######  JOB ADD EDIT DELETE VİEWS  ###############
+class AddJobView(View):
     def get(self, request):
         user_id = request.session['user_id']
         cursor = connection.cursor()
@@ -181,7 +182,7 @@ class JobCreationView(View):
         if recruiter is None:
             return redirect('job-list')
         else:
-            return render(request, 'career/create-job.html')
+            return render(request, 'career/add-job.html')
 
     def post(self, request):
         user_id = request.session['user_id']
@@ -213,8 +214,29 @@ class JobCreationView(View):
                 return redirect('job-list')
 
             else:
-                return render(request, 'career/create-job.html')
+                return render(request, 'career/add-job.html')
 
+
+class ApplyJob(View):
+    def get(self, request, job_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Application WHERE user_id = %s AND job_id = %s;", [user_id, job_id])
+        result = cursor.fetchone()
+        cursor.close()
+        if result is not None:
+            messages.error('You already applied this job')
+            return redirect('job-list')
+        else:
+            date = datetime.now()
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO Application(user_id, job_id, date) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);",
+                           (user_id, job_id, date))
+            connection.commit()
+            cursor.close()
+            messages.success(request, 'You applied this job successfully')
+            
+        return redirect('job-list')
 
 # #######  POST AND COMMENT VİEWS (ADD, DELETE, LİST)   ###############
 class PostListView(View):
@@ -239,6 +261,7 @@ class PostListView(View):
         cursor.close()
 
         return render(request, 'career/post_list.html', {'posts': posts, 'user_id': user_id})
+
 
 class AddPostView(View):
     def get(self, request):
@@ -285,6 +308,7 @@ class DeletePostView(View):
             cursor.close()
 
         return redirect("/post-list", headers=headers)
+
 
 class PostDetailView(View):
     def get(self, request, post_id):
