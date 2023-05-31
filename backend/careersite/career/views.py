@@ -163,7 +163,7 @@ class JobDescriptionView(View):
     def get(self, request, job_id):
         cursor = connection.cursor() 
         cursor.execute("SELECT * FROM Job WHERE job_id = %s;", [job_id])
-        job = cursor.fetchall()
+        job = cursor.fetchone()
         cursor.execute("SELECT name FROM Company as C JOIN Job as J WHERE C.company_id = J.company_id AND J.job_id = %s", [job_id])
         company = cursor.fetchone()
         cursor.close()
