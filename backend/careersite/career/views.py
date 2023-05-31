@@ -331,19 +331,25 @@ class PostDetailView(View):
 
 
 class DeleteCommentView(View):
-    def post(self, request, post_id, comment_id):
+    def get(self, request, comment_id):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT user_id FROM Comment WHERE post_id = %s  AND comment_id = %s", [post_id, comment_id])
-        comment_user_id = cursor.fetchone()
+        cursor.execute("SELECT user_id, post_id FROM Comment WHERE comment_id = %s", [comment_id])
+        result = cursor.fetchone()
+        if result is None:
+            messages.error(request, 'comment-cannot-be-found')
+            return redirect('post-detail', post_id=post_id)
+
+        comment_user_id = result[0]
+        post_id = result[1]
         cursor.close()
         if comment_user_id != user_id:
             messages.error(request, "You are not permitted to delete this post")
 
         else:
             cursor = connection.cursor()
-            cursor.execute('DELETE FROM Comment WHERE post_id = %s AND comment_id = %s', (post_id, comment_id))
-            cursor.commit()
+            cursor.execute('DELETE FROM Comment WHERE comment_id = %s', [comment_id])
+            connection.commit()
             cursor.close()
 
         return redirect('post-detail', post_id=post_id)
