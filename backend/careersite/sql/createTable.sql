@@ -227,7 +227,7 @@ CREATE TABLE Application(
     cv_url VARCHAR(255),
     PRIMARY KEY(user_id, job_id),
     FOREIGN KEY(user_id) REFERENCES NonAdmin(user_id),
-    FOREIGN KEY(job_id) REFERENCES Company(company_id)
+    FOREIGN KEY(job_id) REFERENCES Job(job_id)
 );
 
 -- CREATE TABLE Chat( 
@@ -350,6 +350,7 @@ VALUES
 INSERT INTO Application(user_id, job_id, date, personal_info, cv_url)
 VALUES
     (1, 1, '2023-05-24 10:20:34', 'My name is John.', 'https://example.com/johndoe-cv.pdf'),
+    (1, 6, '2023-06-01 23:38:46', 'My name is John.', 'https://example.com/johndoe-cv.pdf'),
     (3, 1, '2023-05-25 05:12:58', 'I am a computer scientist.', 'https://example.com/robj-cv.pdf'),
     (3, 2, '2023-03-16 13:19:52', 'I worked at Intel for 5 years.', 'https://example.com/robj-cv.pdf'),
     (5, 3, '2023-04-23 12:26:37', 'I am an expert at data science.', 'https://example.com/cvofjakeray.pdf');

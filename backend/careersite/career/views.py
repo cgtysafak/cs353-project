@@ -169,6 +169,15 @@ class JobDescriptionView(View):
 
         return render(request, 'career/jobdetails.html', {'job': job})
 
+class PastApplicationsView(View):
+    def get(self, request):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Application as A JOIN Job as J JOIN Company as C WHERE A.job_id=J.job_id AND J.company_id = C.company_id AND A.user_id=%s ORDER BY A.date DESC", [user_id])
+        pastJobs = cursor.fetchall()
+        cursor.close()
+
+        return render(request, 'career/past-applications.html', {'pastJobs': pastJobs})
 
 # #######  JOB ADD EDIT DELETE VİEWS  ###############
 class AddJobView(View):

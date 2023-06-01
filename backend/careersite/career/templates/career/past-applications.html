@@ -1,0 +1,29 @@
+{% block content %}
+
+<div>
+    <h1>Your Past Job Applications</h1>
+
+    <table>
+        <tr>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Date of Application</th>
+            <th>Profession</th>
+            <th>Location</th>
+            <th>Requirements</th>
+        </tr>
+        {% for job in pastJobs %}
+            <tr>
+                <td>{{job.8}}</td>
+                <td>{{job.17}}</td>
+                <td>{{job.2}}</td>
+                <td>{{job.10}}</td>
+                <td>{{job.11}}</td>
+                <td>{{job.12}}</td>
+            </tr>
+
+
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
