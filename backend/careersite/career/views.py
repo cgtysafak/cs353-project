@@ -175,14 +175,14 @@ class AddJobView(View):
     def get(self, request):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM User NATURAL JOIN Recruiter WHERE user_id = %s;", user_id)
+        cursor.execute("SELECT * FROM User NATURAL JOIN Recruiter WHERE user_id = %s;", [user_id])
+        recruiter = cursor.fetchone()
         cursor.close()
 
-        recruiter = cursor.fetchone()
         if recruiter is None:
             return redirect('job-list')
         else:
-            return render(request, 'career/add-job.html')
+            return render(request, 'career/add_job.html')
 
     def post(self, request):
         user_id = request.session['user_id']
