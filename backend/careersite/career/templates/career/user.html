@@ -1,0 +1,164 @@
+{% block content %}
+
+<div>
+    <h1>Profile</h1>
+
+    {% if user_type.0 == 'RegularUser' %}
+
+        <table>
+            <tr>
+                <th>Name: </th>
+                <td>{{user_info.0.9}}</td>
+            </tr>
+            <tr>
+                <th>Date of Birth: </th>
+                <td>{{user_info.0.14}}</td>
+            </tr>
+            <tr>
+                <th>E-Mail Address: </th>
+                <td>{{user_info.0.12}}</td>
+            </tr>
+            <tr>
+                <th>Username: </th>
+                <td>{{user_info.0.10}}</td>
+            </tr>
+            <tr>
+                <th>Password: </th>
+                <td>{{user_info.0.11}}</td>
+            </tr>
+            <tr>
+                <th>Profession: </th>
+                <td>{{user_info.0.6}}</td>
+            </tr>
+            <tr>
+                <th>Current Company: </th>
+                <td>{{user_info.0.19}}</td>
+            </tr>
+            <tr>
+                <th>Skills: </th>
+                <td>{{user_info.0.7}}</td>
+            </tr>
+            <tr>
+                <th>Portfolio URL: </th>
+                <td>{{user_info.0.13}}</td>
+            </tr>
+            <tr>
+                <th>Career Grade: </th>
+                <td>{{user_info.0.2}}</td>
+            </tr>
+        </table>
+
+    {% elif user_type.0 == 'Recruiter' %}
+
+        <table>
+            <tr>
+                <th>Name: </th>
+                <td>{{user_info.0.7}}</td>
+            </tr>
+            <tr>
+                <th>Date of Birth: </th>
+                <td>{{user_info.0.3}}</td>
+            </tr>
+            <tr>
+                <th>E-Mail Address: </th>
+                <td>{{user_info.0.10}}</td>
+            </tr>
+            <tr>
+                <th>DP URL: </th>
+                <td>{{user_info.0.11}}</td>
+            </tr>
+            <tr>
+                <th>Username: </th>
+                <td>{{user_info.0.8}}</td>
+            </tr>
+            <tr>
+                <th>Password: </th>
+                <td>{{user_info.0.9}}</td>
+            </tr>
+            <tr>
+                <th>Profession: </th>
+                <td>{{user_info.0.4}}</td>
+            </tr>
+            <tr>
+                <th>Current Company: </th>
+                <td>{{user_info.0.17}}</td>
+            </tr>
+            <tr>
+                <th>Skills: </th>
+                <td>{{user_info.0.5}}</td>
+            </tr>
+        </table>
+
+    {% elif user_type.0 == 'CareerExpert' %}
+
+        <table>
+            <tr>
+                <th>Name: </th>
+                <td>{{user_info.0.7}}</td>
+            </tr>
+            <tr>
+                <th>Date of Birth: </th>
+                <td>{{user_info.0.3}}</td>
+            </tr>
+            <tr>
+                <th>E-Mail Address: </th>
+                <td>{{user_info.0.10}}</td>
+            </tr>
+            <tr>
+                <th>DP URL: </th>
+                <td>{{user_info.0.11}}</td>
+            </tr>
+            <tr>
+                <th>Username: </th>
+                <td>{{user_info.0.8}}</td>
+            </tr>
+            <tr>
+                <th>Password: </th>
+                <td>{{user_info.0.9}}</td>
+            </tr>
+            <tr>
+                <th>Profession: </th>
+                <td>{{user_info.0.4}}</td>
+            </tr>
+            <tr>
+                <th>Current Company: </th>
+                <td>{{user_info.0.17}}</td>
+            </tr>
+            <tr>
+                <th>Skills: </th>
+                <td>{{user_info.0.5}}</td>
+            </tr>
+        </table>
+
+    {% elif user_type.0 == 'Admin' %}
+        <table>        
+            <tr>
+                <th>Name: </th>
+                <td>{{user_info.0.2}}</td>
+            </tr>
+            <tr>
+                <th>E-Mail Address: </th>
+                <td>{{user_info.0.5}}</td>
+            </tr>
+            <tr>
+                <th>DP URL:</th>
+                <td>{{user_info.0.6}}</td>
+            </tr>
+            <tr>
+                <th>Username: </th>
+                <td>{{user_info.0.3}}</td>
+            </tr>
+            <tr>
+                <th>Password: </th>
+                <td>{{user_info.0.4}}</td>
+            </tr>
+        </table>
+
+    {% else %}
+        <h2>Wrong User Type! Please Login Again.</h2>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -26,6 +26,7 @@ urlpatterns = [
     path('post-detail/<int:post_id>', views.PostDetailView.as_view(), name="post-detail"),
     path('delete-comment/<int:comment_id>', views.DeleteCommentView.as_view(), name="delete-comment"),
     path('add-job/', views.AddJobView.as_view(), name="add-job"),
+    path('user/', views.ProfileView.as_view(), name="user"),
 
 ]
 

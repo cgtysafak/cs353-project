@@ -423,10 +423,35 @@ class AddExperience(View):
         return render(request, 'career/add_experience.html')
 
 
+########################################################################################################
 
+# PROFILE VIEW #
+class ProfileView(View):
+    def get(self, request):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_type FROM User WHERE user_id=%s", [user_id])
+        user_type = cursor.fetchone()
+        user_info = ""
 
+        if user_type[0] == 'RegularUser':
+            cursor.execute("SELECT * FROM RegularUser as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
+            user_info = cursor.fetchall()
+        elif user_type[0] == 'Recruiter':
+            cursor.execute("SELECT * FROM Recruiter as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
+            user_info = cursor.fetchall()
+        elif user_type[0] == 'CareerExpert':
+            cursor.execute("SELECT * FROM CareerExpert as C JOIN NonAdmin as N JOIN User as U  JOIN Company as CO WHERE CO.company_id = N.company_id AND C.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
+            user_info = cursor.fetchall()
+        elif user_type[0] == 'Admin':
+            cursor.execute("SELECT * FROM Admin as A JOIN User as U WHERE A.user_id = U.user_id AND U.user_id=%s", [user_id])
+            user_info = cursor.fetchall()
+        else:
+            return HttpResponse("Invalid user type")
 
+        cursor.close()
 
+        return render(request, 'career/user.html', {'user_info': user_info, 'user_type': user_type})
 
 
 
