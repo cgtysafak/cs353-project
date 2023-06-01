@@ -18,6 +18,7 @@ urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name="signup"),
     path('job-list/', views.JobListingsView.as_view(), name="job-list"),
     path('past-applications/', views.PastApplicationsView.as_view(), name="past-applications"),
+    path('past-openings/', views.PastOpeningsView.as_view(), name="past-openings"),
     path('job-detail/<int:job_id>', views.JobDescriptionView.as_view(), name="job-detail"),
     path('post-list/', views.PostListView.as_view(), name="post-list"),
     path('add-post/', views.AddPostView.as_view(), name="add-post"),

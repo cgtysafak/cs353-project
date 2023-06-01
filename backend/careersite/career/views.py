@@ -178,6 +178,16 @@ class PastApplicationsView(View):
         cursor.close()
 
         return render(request, 'career/past-applications.html', {'pastJobs': pastJobs})
+    
+class PastOpeningsView(View):
+    def get(self, request):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Job as J JOIN Company as C WHERE J.company_id = C.company_id AND J.recruiter_id=%s ORDER BY J.due_date DESC", [user_id])
+        pastOp = cursor.fetchall()
+        cursor.close()
+
+        return render(request, 'career/past-openings.html', {'pastOp': pastOp, 'user_type': request.session['user_type']})
 
 # #######  JOB ADD EDIT DELETE VİEWS  ###############
 class AddJobView(View):

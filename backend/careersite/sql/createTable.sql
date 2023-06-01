@@ -244,7 +244,8 @@ VALUES
     ('Jane Smith', 'janesmith', 'letmein', 'janesmith@example.com', 'https://example.com/janesmith.jpg', '2023-05-14 15:45:00', 'Recruiter'),
     ('Robert Johnson', 'robjohnson', 'secret123', 'robjohnson@example.com', NULL, '2023-05-15 09:00:00', 'RegularUser'),
     ('Adison Miner', 'admin', 'admin123', 'admin@example.com', NULL, '2023-05-24 20:15:00', 'Admin'),
-    ('Jake Ray', 'jakeray', 'hello987', 'jaker@example.com', 'https://example.com/jaker.jpg', '2023-01-09 22:33:44', 'Career Expert');
+    ('Jake Ray', 'jakeray', 'hello987', 'jaker@example.com', 'https://example.com/jaker.jpg', '2023-01-09 22:33:44', 'Career Expert'),
+    ('Aubrey Dunne', 'aubrey', 'hey987', 'aubrey@example.com', NULL, '2023-06-02 00:14:24', 'Recruiter');
 
 INSERT INTO Admin(user_id)
 VALUES
@@ -255,7 +256,8 @@ VALUES
     (1, 1, '1985-07-17', 'Junior Programmer', 'Python, Java, C#, Ruby, Swift'),
     (2, 2, '1974-11-28', 'Human Resources', 'Finance, Business' ),
     (3, 3, '2000-06-09', 'Professor', 'Machine Engineering, Statistics'),
-    (5, 2, '1989-03-13', 'Career Expert', 'Career Advisor');
+    (5, 2, '1989-03-13', 'Career Expert', 'Career Advisor'),
+    (6, 4, '1973-06-09', 'Software Talent Hunter', 'MS Office');
 
 INSERT INTO RegularUser(user_id, portfolio_url, avg_career_grd)
 VALUES
@@ -264,7 +266,8 @@ VALUES
 
 INSERT INTO Recruiter(user_id)
 VALUES
-    (2);
+    (2),
+    (6);
 
 INSERT INTO CareerExpert(user_id)
 VALUES
@@ -315,12 +318,12 @@ INSERT INTO Job(company_id, recruiter_id, job_id, title, due_date, profession, l
 VALUES
     -- (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering'),
     (2, 2, 2, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript, Senior Developer', 'Project Manager for app.'),
-    (2, 2, 3, 'Front-end Developer', '2023-06-06', 'Developer', 'Ankara', 'Bootstrap', 'Front-end developer for DB project.'),
+    (2, 6, 3, 'Front-end Developer', '2023-06-06', 'Developer', 'Ankara', 'Bootstrap', 'Front-end developer for DB project.'),
     (3, 2, 4, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript', 'Project Manager for app.'),
-    (4, 2, 5, 'Backend Developer', '2023-06-06', 'Developer', 'New York', 'C#, Javascript', 'Project Manager for app.'),
+    (4, 6, 5, 'Backend Developer', '2023-06-06', 'Developer', 'New York', 'C#, Javascript', 'Project Manager for app.'),
     (3, 2, 6, 'Software Tester', '2023-06-06', 'Tester', 'Ankara', 'C#, Javascript', 'Project Manager for app.'),
-    (1, 2, 7, 'Senior Backend Developer', '2023-06-06', 'Developer', 'New York', 'Senior Developer', 'Project Manager for app.'),
-    (4, 2, 8, 'Technical Lead/Manager', '2023-06-06', 'Tech Lead', 'Istanbul', 'Java, Javascript', 'Project Manager for app.'),
+    (1, 6, 7, 'Senior Backend Developer', '2023-06-06', 'Developer', 'New York', 'Senior Developer', 'Project Manager for app.'),
+    (4, 6, 8, 'Technical Lead/Manager', '2023-06-06', 'Tech Lead', 'Istanbul', 'Java, Javascript', 'Project Manager for app.'),
     (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering');
 
 INSERT INTO Post(user_id, title, content, date)
