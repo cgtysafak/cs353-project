@@ -177,7 +177,7 @@ class PastApplicationsView(View):
         pastJobs = cursor.fetchall()
         cursor.close()
 
-        return render(request, 'career/past-applications.html', {'pastJobs': pastJobs})
+        return render(request, 'career/application-list.html', {'pastJobs': pastJobs})
     
 class PastOpeningsView(View):
     def get(self, request):
