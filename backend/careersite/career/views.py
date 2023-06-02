@@ -197,19 +197,29 @@ class AddJobView(View):
         cursor.execute("SELECT * FROM User NATURAL JOIN Recruiter WHERE user_id = %s;", [user_id])
         recruiter = cursor.fetchone()
         cursor.close()
+        
+        cursor = connection.cursor()
+        cursor.execute("SELECT company_id FROM NonAdmin WHERE user_id = %s;", [user_id])
+        company_id = cursor.fetchone()
+        cursor.close()
+        
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Company WHERE company_id = %s;", company_id)
+        company = cursor.fetchone()
+        cursor.close()
 
         if recruiter is None:
             return redirect('job-list')
         else:
-            return render(request, 'career/add_job.html')
+            return render(request, 'career/add_job.html', {'company': company})
 
     def post(self, request):
         user_id = request.session['user_id']
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM NonAdmin NATURAL JOIN Recruiter WHERE user_id = %s;", user_id)
-        cursor.close()
-
         recruiter = cursor.fetchone()
+        cursor.close()
+        
         if recruiter is None:
             return redirect('job-list')
         else:

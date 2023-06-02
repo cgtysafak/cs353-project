@@ -75,7 +75,7 @@
                 type="text"
                 class="form-control"
                 style="max-width: 500px; margin: margin-left;"
-                value="Apple Inc.{{ user.company_name }}"
+                value="{{ company.3 }}"
                 disabled
             >
         </div>
@@ -85,7 +85,7 @@
                 type="text"
                 class="form-control"
                 style="max-width: 500px; margin: margin-left;"
-                value="Apple produces consumer electronics and software.{{ user.company_description }}"
+                value="{{ company.2 }}"
                 disabled
             >
         </div>
@@ -95,7 +95,7 @@
                 type="text"
                 class="form-control"
                 style="max-width: 500px; margin: margin-left;"
-                value="Cupertino{{ user.company_location }}"
+                value="{{ company.1 }}"
                 disabled
             >
         </div>
@@ -106,6 +106,7 @@
         <button class="btn btn-danger" onclick="location.href='/post-list'" type="button">
             CANCEL
         </button>
+        <br><br>
     </form>
 </div>
 {% endblock %}
