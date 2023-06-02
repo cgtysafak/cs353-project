@@ -20,6 +20,7 @@ urlpatterns = [
     path('application-list/', views.PastApplicationsView.as_view(), name="application-list"),
     path('past-openings/', views.PastOpeningsView.as_view(), name="past-openings"),
     path('job-detail/<int:job_id>', views.JobDescriptionView.as_view(), name="job-detail"),
+    path('candidates/<int:job_id>', views.CandidatesView.as_view(), name="candidates"),
     path('post-list/', views.PostListView.as_view(), name="post-list"),
     path('add-post/', views.AddPostView.as_view(), name="add-post"),
     path('delete-post/<int:post_id>', views.DeletePostView.as_view(), name="delete-post"),

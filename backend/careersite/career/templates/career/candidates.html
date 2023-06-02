@@ -1,0 +1,28 @@
+{% block content %}
+
+<div>
+    <h1>Candidates</h1>
+
+    <table>
+        <tr>
+            <th>Applicant's Name</th>
+            <th>E-Mail Address</th>
+            <th>CV Link</th>
+            <th>DP URL</th>
+            <th>Personal Info</th>
+            <th>Application Date</th>
+        </tr>
+        {% for cand in candidates %}
+            <tr>
+                <td>{{cand.15}}</td>
+                <td>{{cand.18}}</td>
+                <td>{{cand.13}}</td>
+                <td>{{cand.19}}</td>
+                <td>{{cand.12}}</td>
+                <td>{{cand.11}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

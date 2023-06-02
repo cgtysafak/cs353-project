@@ -265,6 +265,17 @@ class AddJobView(View):
             else:
                 return render(request, 'career/add-job.html')
 
+
+class CandidatesView(View):
+    def get(self, request, job_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Job as J JOIN Application as A JOIN User as U WHERE U.user_id=A.user_id AND J.job_id=A.job_id AND J.job_id=%s AND J.recruiter_id=%s ORDER BY A.date ASC", [job_id, user_id])
+        candidates = cursor.fetchall()
+        cursor.close()
+
+        return render(request, 'career/candidates.html', {'candidates': candidates})
+
 # class ApplyJob(View):
 #     def get(self, request, job_id):
 #         user_id = request.session['user_id']
