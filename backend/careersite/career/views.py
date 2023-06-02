@@ -175,15 +175,21 @@ class JobDescriptionView(View):
         
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM User NATURAL JOIN RegularUser WHERE user_id = %s;", [user_id])
+        cursor.execute("SELECT * FROM RegularUser WHERE user_id = %s;", [user_id])
         applicant = cursor.fetchone()
         cursor.close()
         
         personal_info = request.POST.get("personal_info", "")
 
+        if applicant is None:
+            messages.error(request, "Please fill in the CV")
+            return redirect('job-detail', job_id)
+
+        print(applicant)
+        
         cursor = connection.cursor()
         cursor.execute("INSERT INTO Application(user_id, job_id, date, personal_info, cv_url) VALUES(%s, %s, %s, %s, %s);",
-                        (user_id, job_id, datetime.now(), personal_info, applicant[0]))
+                       (user_id, job_id, datetime.now(), personal_info, applicant[1]))
         connection.commit()
         cursor.close()
         messages.success(request, "Application is added")
