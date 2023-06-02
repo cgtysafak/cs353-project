@@ -21,27 +21,38 @@
                     <p class="card-title"><b>Company Description:</b> {{job.11}}</p>
                     <p class="card-title"><b>Company Location:</b> {{job.10}}</p>
                     <hr/>
-                    <form method="post" action="/job-detail/{{job.2}}">
-                        {% csrf_token %}
-                        <div class="form-row">
-                            <label for="personal-information"><em>Personal Information</em></label>
-                            <textarea
-                                class="form-control"
-                                id="personal-information"
-                                name="personal-information"
-                                style="margin: margin-left;"
-                                rows="3"
-                                required
-                                placeholder="Describe yourself in detail. What are your career goals? Why do you want to work for this company? What relevant experience do you have?"
-                            ></textarea>
-                        </div>
+                    {% if user_type != 'Recruiter' %}
+                        <form method="post" action="/job-detail/{{job.2}}">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <label for="personal-information"><em>Personal Information</em></label>
+                                <textarea
+                                    class="form-control"
+                                    id="personal-information"
+                                    name="personal-information"
+                                    style="margin: margin-left;"
+                                    rows="3"
+                                    required
+                                    placeholder="Describe yourself in detail. What are your career goals? Why do you want to work for this company? What relevant experience do you have?"
+                                ></textarea>
+                            </div>
+                            <br>
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Apply this job!
+                            </button>
+                        </form>
                         <br>
-                        <button type="submit" class="btn btn-primary">Apply this job!</button>
-                    </form>
-                    <br>
-                    <div class="alert alert-warning" role="alert">
-                        Recruiters will view the CV that is on your profile when you apply for this job. Update your CV on <a class="alert-link" href="http://127.0.0.1:8000/user">your profile</a> when needed.
-                    </div>
+                        <div class="alert alert-warning" role="alert">
+                            Recruiters will view the CV that is on your profile when you apply for this job. Update your CV on <a class="alert-link" href="http://127.0.0.1:8000/user">your profile</a> when needed.
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger" role="alert">
+                            Recruiters cannot apply for job openings.
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </tr>
