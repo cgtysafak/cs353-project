@@ -319,13 +319,20 @@ class PostListView(View):
 
         user_id = request.session['user_id']
 
-        query = "SELECT * FROM POST NATURAL JOIN User WHERE 1=1"
+        query = "SELECT *, count(P.post_id) as num_of_comments FROM Post as P NATURAL JOIN User " \
+                "LEFT JOIN Comment as C ON P.post_id = C.post_id " \
+                "WHERE 1=1 GROUP BY P.post_id"
+        # query = "SELECT *, count(post_id) as num_of_comments FROM POST NATURAL JOIN User " \
+        #        "WHERE 1=1 GROUP BY post_id"
+
         params = []
 
-        if ordering == 'title':
-            query += " ORDER BY title"
-        elif ordering == 'date':
+        if ordering == 'oldest':
             query += " ORDER BY date"
+        elif ordering == "newest":
+            query += " ORDER BY date DESC"
+        elif ordering == "most_popular":
+            query += " ORDER BY num_of_comments DESC"
 
         cursor = connection.cursor()
         cursor.execute(query, params)
