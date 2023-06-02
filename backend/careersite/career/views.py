@@ -129,6 +129,8 @@ class LogoutView(View):
 
 class JobListingsView(View):
     def get( self, request ):
+        user_id = request.session['user_id']
+        
         search_term = request.GET.get('term', '')
         cursor = connection.cursor()
         query = "SELECT * FROM Company AS C JOIN Job AS J ON C.company_id = J.company_id"
@@ -154,6 +156,7 @@ class JobListingsView(View):
 
         return render(request, 'career/joblist.html', {
             'jobs': jobs,
+            'user_id': user_id,
             'user_type': request.session['user_type'],
             'applied_job_ids': applied_job_ids,
         });
@@ -186,35 +189,6 @@ class JobDescriptionView(View):
         cursor.close()
 
         return redirect("job-detail", job_id = job_id)
-
-    # def post(self, request, job_id):
-    #     # cursor = connection.cursor() 
-    #     # cursor.execute("SELECT * FROM Job j JOIN Company c ON j.company_id = c.company_id WHERE job_id = %s;", [job_id])
-    #     # job = cursor.fetchone()
-    #     # cursor.close()
-        
-    #     user_id = request.session['user_id']
-    #     cursor = connection.cursor()
-    #     cursor.execute("SELECT * FROM RegularUser WHERE user_id = %s;", [user_id])
-    #     applicant = cursor.fetchone()
-    #     cursor.close()
-        
-    #     personal_info = request.POST.get("personal_info", "")
-
-    #     if applicant is None:
-    #         messages.error(request, "Please fill in the CV")
-    #         return redirect('job-detail', job_id)
-
-    #     print(applicant)
-        
-    #     cursor = connection.cursor()
-    #     cursor.execute("INSERT INTO Application(user_id, job_id, date, personal_info, cv_url) VALUES(%s, %s, %s, %s, %s);",
-    #                    (user_id, job_id, datetime.now(), personal_info, applicant.portfolio_url))
-    #     connection.commit()
-    #     cursor.close()
-    #     messages.success(request, "Application is added")
-
-    #     return redirect('job-detail', job_id)
 
 class PastApplicationsView(View):
     def get(self, request):

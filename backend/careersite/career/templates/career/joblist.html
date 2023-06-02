@@ -26,20 +26,30 @@
         <tbody>
             {% for job in jobs %}
             <tr>
-                <td>{{job.7}}</td>
+                <td>{{job.7}} (rID = {{job.5}})</td>
                 <td>{{job.3}}</td>
                 <td>{{job.9}}</td>
                 <td>{{job.10}}</td>
                 <td>{{job.11}}</td>
                 <td>
-                    <button
-                        class="btn btn-outline-primary btn-sm"
-                        onclick="location.href='/job-detail/{{job.6}}'"
-                        type="button"
-                        {% if job.6 in applied_job_ids %} disabled {% endif %}
-                    >
-                        {% if job.6 in applied_job_ids %} Already Applied {% else %} View Details {% endif %}
-                    </button>
+                    {% if user_id != job.5 %}
+                        <button
+                            class="btn btn-outline-primary btn-sm"
+                            onclick="location.href='/job-detail/{{job.6}}'"
+                            type="button"
+                            {% if job.6 in applied_job_ids %} disabled {% endif %}
+                        >
+                            {% if job.6 in applied_job_ids %} Already Applied {% else %} View Details {% endif %}
+                        </button>
+                    {% else %}
+                        <button
+                            class="btn btn-outline-secondary btn-sm"
+                            onclick="location.href='/home'"
+                            type="button"
+                        >
+                            Edit Job
+                        </button>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
