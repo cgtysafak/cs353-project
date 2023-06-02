@@ -137,8 +137,16 @@ class LogoutView(View):
 # #######  JOB LISTING-DETAILS-APPLY VİEWS  ###############
 class JobListingsView(View):
     def get( self, request ):
+        search_term = request.GET.get('term', '')
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Company as C JOIN Job as J WHERE C.company_id = J.company_id")
+        query = "SELECT * FROM Company AS C JOIN Job AS J ON C.company_id = J.company_id"
+
+        if search_term is not None:
+            query += " WHERE J.title LIKE %s OR  C.name LIKE %s OR J.profession LIKE %s"
+            cursor.execute(query, [('%' + search_term + '%'), ('%' + search_term + '%'), ('%' + search_term + '%')])
+
+        else:
+            cursor.execute(query)
         jobs = cursor.fetchall()
         cursor.close()
         
@@ -151,7 +159,6 @@ class JobListingsView(View):
         
         for applied_job in applied_jobs:
             applied_job_ids.append(applied_job[0])
-            
 
         return render(request, 'career/joblist.html', {
             'jobs': jobs,
