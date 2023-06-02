@@ -165,36 +165,56 @@ class JobDescriptionView(View):
         job = cursor.fetchone()
         cursor.close()
         
-        return render(request, 'career/job-detail.html', {'job': job})
+        user_type = request.session['user_type']
+        
+        return render(request, 'career/job-detail.html', {'job': job, 'user_type': user_type})
 
     def post(self, request, job_id):
-        # cursor = connection.cursor() 
-        # cursor.execute("SELECT * FROM Job j JOIN Company c ON j.company_id = c.company_id WHERE job_id = %s;", [job_id])
-        # job = cursor.fetchone()
-        # cursor.close()
-        
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM RegularUser WHERE user_id = %s;", [user_id])
-        applicant = cursor.fetchone()
+        cursor.execute("SELECT * FROM Job WHERE job_id=%s", [job_id])
+        job = cursor.fetchone()
         cursor.close()
-        
-        personal_info = request.POST.get("personal_info", "")
 
-        if applicant is None:
-            messages.error(request, "Please fill in the CV")
-            return redirect('job-detail', job_id)
+        personal_informaion = request.POST.get("personal-information", "")
+        date = datetime.now() + timedelta(hours=3)
 
-        print(applicant)
-        
         cursor = connection.cursor()
         cursor.execute("INSERT INTO Application(user_id, job_id, date, personal_info, cv_url) VALUES(%s, %s, %s, %s, %s);",
-                       (user_id, job_id, datetime.now(), personal_info, applicant[1]))
+                       (user_id, job_id, date, personal_informaion, ""))
         connection.commit()
         cursor.close()
-        messages.success(request, "Application is added")
 
-        return redirect('job-list')
+        return redirect("job-detail", job_id = job_id)
+
+    # def post(self, request, job_id):
+    #     # cursor = connection.cursor() 
+    #     # cursor.execute("SELECT * FROM Job j JOIN Company c ON j.company_id = c.company_id WHERE job_id = %s;", [job_id])
+    #     # job = cursor.fetchone()
+    #     # cursor.close()
+        
+    #     user_id = request.session['user_id']
+    #     cursor = connection.cursor()
+    #     cursor.execute("SELECT * FROM RegularUser WHERE user_id = %s;", [user_id])
+    #     applicant = cursor.fetchone()
+    #     cursor.close()
+        
+    #     personal_info = request.POST.get("personal_info", "")
+
+    #     if applicant is None:
+    #         messages.error(request, "Please fill in the CV")
+    #         return redirect('job-detail', job_id)
+
+    #     print(applicant)
+        
+    #     cursor = connection.cursor()
+    #     cursor.execute("INSERT INTO Application(user_id, job_id, date, personal_info, cv_url) VALUES(%s, %s, %s, %s, %s);",
+    #                    (user_id, job_id, datetime.now(), personal_info, applicant.portfolio_url))
+    #     connection.commit()
+    #     cursor.close()
+    #     messages.success(request, "Application is added")
+
+    #     return redirect('job-detail', job_id)
 
 class PastApplicationsView(View):
     def get(self, request):
@@ -271,26 +291,26 @@ class AddJobView(View):
             else:
                 return render(request, 'career/add-job.html')
 
-class ApplyJob(View):
-    def get(self, request, job_id):
-        user_id = request.session['user_id']
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Application WHERE user_id = %s AND job_id = %s;", [user_id, job_id])
-        result = cursor.fetchone()
-        cursor.close()
-        if result is not None:
-            messages.error('You already applied this job')
-            return redirect('job-list')
-        else:
-            date = datetime.now()
-            cursor = connection.cursor()
-            cursor.execute("INSERT INTO Application(user_id, job_id, date) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);",
-                           (user_id, job_id, date))
-            connection.commit()
-            cursor.close()
-            messages.success(request, 'You applied this job successfully')
+# class ApplyJob(View):
+#     def get(self, request, job_id):
+#         user_id = request.session['user_id']
+#         cursor = connection.cursor()
+#         cursor.execute("SELECT * FROM Application WHERE user_id = %s AND job_id = %s;", [user_id, job_id])
+#         result = cursor.fetchone()
+#         cursor.close()
+#         if result is not None:
+#             messages.error('You already applied this job')
+#             return redirect('job-list')
+#         else:
+#             date = datetime.now()
+#             cursor = connection.cursor()
+#             cursor.execute("INSERT INTO Application(user_id, job_id, date) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);",
+#                            (user_id, job_id, date))
+#             connection.commit()
+#             cursor.close()
+#             messages.success(request, 'You applied this job successfully')
 
-        return redirect('job-list')
+#         return redirect('job-list')
 
 class PostListView(View):
     def get(self, request):
