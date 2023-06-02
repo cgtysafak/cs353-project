@@ -127,7 +127,7 @@ CREATE TABLE Job(
     company_id INTEGER NOT NULL,
     recruiter_id INTEGER NOT NULL,
     job_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    title VARCHAR(255),
+    title VARCHAR(255) NOT NULL,
     due_date DATETIME,
     profession VARCHAR(255),
     location VARCHAR(255),
