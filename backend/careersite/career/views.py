@@ -116,12 +116,6 @@ class SignUpView(View):
                     cursor.close()
                     connection.commit()
 
-                # These are required if we want to redirect to home page after signup
-                # 
-                # request.session['username'] = username
-                # request.session['user_id'] = user_id
-                # request.session['user_type'] = user_type
-
                 print("user is successfully created")
                 return HttpResponseRedirect("/login")
             else:
@@ -133,8 +127,6 @@ class LogoutView(View):
         request.session.flush()
         return HttpResponseRedirect("/")
 
-
-# #######  JOB LISTING-DETAILS-APPLY VİEWS  ###############
 class JobListingsView(View):
     def get( self, request ):
         cursor = connection.cursor()
@@ -159,15 +151,37 @@ class JobListingsView(View):
             'applied_job_ids': applied_job_ids,
         });
 
-
 class JobDescriptionView(View):
     def get(self, request, job_id):
         cursor = connection.cursor() 
         cursor.execute("SELECT * FROM Job j JOIN Company c ON j.company_id = c.company_id WHERE job_id = %s;", [job_id])
         job = cursor.fetchone()
         cursor.close()
+        
+        return render(request, 'career/job-detail.html', {'job': job})
 
-        return render(request, 'career/jobdetails.html', {'job': job})
+    def post(self, request, job_id):
+        # cursor = connection.cursor() 
+        # cursor.execute("SELECT * FROM Job j JOIN Company c ON j.company_id = c.company_id WHERE job_id = %s;", [job_id])
+        # job = cursor.fetchone()
+        # cursor.close()
+        
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM User NATURAL JOIN RegularUser WHERE user_id = %s;", [user_id])
+        applicant = cursor.fetchone()
+        cursor.close()
+        
+        personal_info = request.POST.get("personal_info", "")
+
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO Application(user_id, job_id, date, personal_info, cv_url) VALUES(%s, %s, %s, %s, %s);",
+                        (user_id, job_id, datetime.now(), personal_info, applicant[0]))
+        connection.commit()
+        cursor.close()
+        messages.success(request, "Application is added")
+
+        return redirect('job-list')
 
 class PastApplicationsView(View):
     def get(self, request):
@@ -189,7 +203,6 @@ class PastOpeningsView(View):
 
         return render(request, 'career/past-openings.html', {'pastOp': pastOp, 'user_type': request.session['user_type']})
 
-# #######  JOB ADD EDIT DELETE VİEWS  ###############
 class AddJobView(View):
     def get(self, request):
         user_id = request.session['user_id']
@@ -245,7 +258,6 @@ class AddJobView(View):
             else:
                 return render(request, 'career/add-job.html')
 
-
 class ApplyJob(View):
     def get(self, request, job_id):
         user_id = request.session['user_id']
@@ -267,7 +279,6 @@ class ApplyJob(View):
 
         return redirect('job-list')
 
-# #######  POST AND COMMENT VİEWS (ADD, DELETE, LİST)   ###############
 class PostListView(View):
     def get(self, request):
 
