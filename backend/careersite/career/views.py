@@ -216,19 +216,19 @@ class AddJobView(View):
     def post(self, request):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM NonAdmin NATURAL JOIN Recruiter WHERE user_id = %s;", user_id)
+        cursor.execute("SELECT * FROM NonAdmin NATURAL JOIN Recruiter WHERE user_id = %s;", [user_id])
         recruiter = cursor.fetchone()
         cursor.close()
         
         if recruiter is None:
             return redirect('job-list')
         else:
-            title = request.POST.get("title", "")
-            due_date = request.POST.get("due_date", "")
-            profession = request.POST.get("profession", "")
-            location = request.POST.get("location", "")
-            job_requirements = request.POST.get("job_requirements", "")
-            description = request.POST.get("description", "")
+            title = request.POST.get("job-title", "")
+            due_date = request.POST.get("due-date", "")
+            profession = request.POST.get("job-profession", "")
+            location = request.POST.get("job-location", "")
+            job_requirements = request.POST.get("job-requirements", "")
+            description = request.POST.get("job-description", "")
 
             if title != "":
                 cursor = connection.cursor()
