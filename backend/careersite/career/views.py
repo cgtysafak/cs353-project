@@ -194,7 +194,7 @@ class PastApplicationsView(View):
     def get(self, request):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Application as A JOIN Job as J JOIN Company as C WHERE A.job_id=J.job_id AND J.company_id = C.company_id AND A.user_id=%s ORDER BY A.date DESC", [user_id])
+        cursor.execute("SELECT J.title, C.name, A.date, J.profession, J.location, J.job_requirements FROM Application as A JOIN Job as J JOIN Company as C WHERE A.job_id=J.job_id AND J.company_id = C.company_id AND A.user_id=%s ORDER BY A.date DESC", [user_id])
         pastJobs = cursor.fetchall()
         cursor.close()
 
@@ -204,7 +204,7 @@ class PastOpeningsView(View):
     def get(self, request):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Job as J JOIN Company as C WHERE J.company_id = C.company_id AND J.recruiter_id=%s ORDER BY J.due_date DESC", [user_id])
+        cursor.execute("SELECT J.title, C.name, J.due_date, J.profession, J.location, J.job_requirements FROM Job as J JOIN Company as C WHERE J.company_id = C.company_id AND J.recruiter_id=%s ORDER BY J.due_date DESC", [user_id])
         pastOp = cursor.fetchall()
         cursor.close()
 
@@ -270,7 +270,7 @@ class CandidatesView(View):
     def get(self, request, job_id):
         user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Job as J JOIN Application as A JOIN User as U WHERE U.user_id=A.user_id AND J.job_id=A.job_id AND J.job_id=%s AND J.recruiter_id=%s ORDER BY A.date ASC", [job_id, user_id])
+        cursor.execute("SELECT U.full_name, U.email_address, A.cv_url, U.dp_url, A.personal_info, A.date FROM Job as J JOIN Application as A JOIN User as U WHERE U.user_id=A.user_id AND J.job_id=A.job_id AND J.job_id=%s AND J.recruiter_id=%s ORDER BY A.date ASC", [job_id, user_id])
         candidates = cursor.fetchall()
         cursor.close()
 
@@ -481,16 +481,16 @@ class ProfileView(View):
         user_info = ""
 
         if user_type[0] == 'RegularUser':
-            cursor.execute("SELECT * FROM RegularUser as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
+            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills, R.portfolio_url, R.avg_career_grd FROM RegularUser as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
             user_info = cursor.fetchall()
         elif user_type[0] == 'Recruiter':
-            cursor.execute("SELECT * FROM Recruiter as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
+            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills FROM Recruiter as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
             user_info = cursor.fetchall()
         elif user_type[0] == 'CareerExpert':
-            cursor.execute("SELECT * FROM CareerExpert as C JOIN NonAdmin as N JOIN User as U  JOIN Company as CO WHERE CO.company_id = N.company_id AND C.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
+            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, CO.name, N.skills FROM CareerExpert as C JOIN NonAdmin as N JOIN User as U JOIN Company as CO WHERE CO.company_id = N.company_id AND C.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
             user_info = cursor.fetchall()
         elif user_type[0] == 'Admin':
-            cursor.execute("SELECT * FROM Admin as A JOIN User as U WHERE A.user_id = U.user_id AND U.user_id=%s", [user_id])
+            cursor.execute("SELECT U.full_name, U.email_address, U.dp_url, U.username, U.password FROM Admin as A JOIN User as U WHERE A.user_id = U.user_id AND U.user_id=%s", [user_id])
             user_info = cursor.fetchall()
         else:
             return HttpResponse("Invalid user type")
