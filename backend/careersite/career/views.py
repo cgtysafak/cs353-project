@@ -11,9 +11,10 @@ from django.middleware.csrf import get_token
 class HomeView(View):
     def get(self, request):
         if 'username' in request.session:
+            user_id = request.session['user_id']
             user_type = request.session['user_type']
             username = request.session['username']
-            return render(request, 'career/home.html', {'user_type': user_type, 'username': username})
+            return render(request, 'career/home.html', {'user_type': user_type, 'username': username, 'user_id': user_id})
         return HttpResponseRedirect("/login")
 
 class UsersView(View):
@@ -554,9 +555,6 @@ class AddExperience(View):
         cursor = connection.cursor()
         return render(request, 'career/add_experience.html')
 
-
-########################################################################################################
-
 # PROFILE VIEW #
 class ProfileView(View):
     def get(self, request):
@@ -566,7 +564,7 @@ class ProfileView(View):
         user_type = cursor.fetchone()
         user_info = ""
 
-        if user_type[0] == 'RegularUser':
+        if user_type[0] == 'Job Hunter':
             cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills, R.portfolio_url, R.avg_career_grd FROM RegularUser as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
             user_info = cursor.fetchall()
         elif user_type[0] == 'Recruiter':
@@ -579,7 +577,7 @@ class ProfileView(View):
             cursor.execute("SELECT U.full_name, U.email_address, U.dp_url, U.username, U.password FROM Admin as A JOIN User as U WHERE A.user_id = U.user_id AND U.user_id=%s", [user_id])
             user_info = cursor.fetchall()
         else:
-            return HttpResponse("Invalid user type")
+            return HttpResponse("Invalid user type" + user_type[0])
 
         cursor.close()
 

@@ -1,10 +1,10 @@
+{% extends 'career/baseauth.html' %}
+
 {% block content %}
 
 <div>
     <h1>Profile</h1>
-
-    {% if user_type.0 == 'RegularUser' %}
-
+    {% if user_type.0 == 'Job Hunter' %}
         <table>
             <tr>
                 <th>Name: </th>
@@ -51,9 +51,7 @@
                 <td>{{user_info.0.10}}</td>
             </tr>
         </table>
-
     {% elif user_type.0 == 'Recruiter' %}
-
         <table>
             <tr>
                 <th>Name: </th>
@@ -92,7 +90,6 @@
                 <td>{{user_info.0.8}}</td>
             </tr>
         </table>
-
     {% elif user_type.0 == 'CareerExpert' %}
         <table>
             <tr>
@@ -132,7 +129,6 @@
                 <td>{{user_info.0.8}}</td>
             </tr>
         </table>
-
     {% elif user_type.0 == 'Admin' %}
         <table>        
             <tr>
@@ -156,12 +152,8 @@
                 <td>{{user_info.0.4}}</td>
             </tr>
         </table>
-
     {% else %}
         <h2>Wrong User Type! Please Login Again.</h2>
-
     {% endif %}
-
 </div>
-
 {% endblock %}
