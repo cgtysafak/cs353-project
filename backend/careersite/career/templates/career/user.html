@@ -9,9 +9,11 @@
                 <div class="card-body">
                     <h2 class="card-title">Profile page for @{{user.2}}</h2>
                     <hr/>
-                    <p class="card-title"><b>Full Name:</b> {{user.2}}</p>
+                    <p class="card-title"><b>Full Name:</b> {{user.1}}</p>
                     <p class="card-title"><b>Email Address:</b> {{user.4}}</p>
                     <p class="card-title"><b>Registeration Date:</b> {{user.6}}</p>
+                    <p class="card-title"><b>Account Type:</b> {{user.7}}</p>
+                    <hr/>
                     <p class="card-title"><b>Account Type:</b> {{user.7}}</p>
                     <hr/>
                     {% if current_user_id == user.0 %}
@@ -19,13 +21,31 @@
                             type="submit"
                             class="btn btn-primary"
                         >
-                            Apply this job!
+                            Edit Profile
                         </button>
                         <br><br>
                         <div class="alert alert-warning" role="alert">
                             THATS YOUR PROFILE.
                         </div>
+                    {% elif current_user_type == 'CareerExpert' and profile_user_type == 'RegularUser'%}
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Grade this profile!
+                        </button>
+                        <br><br>
+                        <div class="alert alert-danger" role="alert">
+                            THATS NOT YOUR PROFILE.
+                        </div>
                     {% else %}
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Add connection!
+                        </button>
+                        <br><br>
                         <div class="alert alert-danger" role="alert">
                             THATS NOT YOUR PROFILE.
                         </div>
