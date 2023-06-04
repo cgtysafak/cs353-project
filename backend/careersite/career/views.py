@@ -188,7 +188,7 @@ class JobDescriptionView(View):
         connection.commit()
         cursor.close()
 
-        return redirect("job-detail", job_id = job_id)
+        return redirect("job-list")
 
 class PastApplicationsView(View):
     def get(self, request):
