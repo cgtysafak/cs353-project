@@ -500,6 +500,83 @@ class ProfileView(View):
         return render(request, 'career/user.html', {'user_info': user_info, 'user_type': user_type})
 
 
+class ProfileEditView(View):
+    def get(self, request, user_id):
+        return render(request, 'career/update_profile.html')
+    
+    def post(self, request, user_id): 
+        name = request.POST.get("name", "")
+        dob = request.POST.get("dob", "")
+        email = request.POST.get("email", "")
+        dp_url = request.POST.get("dp_url", "")
+        username = request.POST.get("username", "")
+        password = request.POST.get("password", "")
+        profession = request.POST.get("profession", "")
+        skills = request.POST.get("skills", "")
+        company = request.POST.get("company", "")
+        portfolio = request.POST.get("portfolio", "")
+
+        # user_id =request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_type FROM User WHERE user_id=%s", [user_id])
+        user_type = cursor.fetchone()
+        
+        if name != "":
+            cursor.execute("UPDATE User SET full_name=%s WHERE user_id=%s", [name, user_id])
+            messages.success(request, "Your changes are saved.")
+
+        if email != "":
+            cursor.execute("UPDATE User SET email_address=%s WHERE user_id=%s", [email, user_id])
+            messages.success(request, "Your changes are saved.")
+
+        
+        if dp_url != "":
+            cursor.execute("UPDATE User SET dp_url=%s WHERE user_id=%s", [dp_url, user_id])
+            messages.success(request, "Your changes are saved.")
+
+
+        if username != "":
+            cursor.execute("UPDATE User SET username=%s WHERE user_id=%s", [username, user_id])
+            messages.success(request, "Your changes are saved.")
+
+
+        if password != "":
+            cursor.execute("UPDATE User SET password=%s WHERE user_id=%s", [password, user_id])
+            messages.success(request, "Your changes are saved.")
+
+
+
+        if user_type[0] != 'Admin':
+            if dob != "":
+                cursor.execute("UPDATE NonAdmin SET birth_date=%s WHERE user_id=%s", [dob, user_id])
+                messages.success(request, "Your changes are saved.")
+
+            
+            if profession != "":
+                cursor.execute("UPDATE NonAdmin SET profession=%s WHERE user_id=%s", [profession, user_id])
+                messages.success(request, "Your changes are saved.")
+
+
+            if skills != "":
+                cursor.execute("UPDATE NonAdmin SET skills=%s WHERE user_id=%s", [skills, user_id])
+                messages.success(request, "Your changes are saved.")
+
+
+            if company != "":
+                cursor.execute("SELECT company_id FROM Company as C JOIN NonAdmin as N WHERE C.company_id=N.company_id WHERE C.name=%s", company)
+                new_comp_id = cursor.fetchone()
+
+                if new_comp_id != None:
+                    cursor.execute("UPDATE NonAdmin SET company_id=%s WHERE user_id=%s", [new_comp_id, user_id])
+                    messages.success(request, "Your changes are saved.")
+
+                    
+        if user_type == 'RegularUser':
+            if portfolio != "":
+                cursor.execute("UPDATE RegularUser SET portfolio_url=%s WHERE user_id=%s", [portfolio, user_id])
+                messages.success(request, "Your changes are saved.")
+
+        return render(request, 'career/user.html')
 
 
 

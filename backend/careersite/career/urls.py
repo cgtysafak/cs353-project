@@ -28,6 +28,7 @@ urlpatterns = [
     path('delete-comment/<int:comment_id>', views.DeleteCommentView.as_view(), name="delete-comment"),
     path('add-job/', views.AddJobView.as_view(), name="add-job"),
     path('user/', views.ProfileView.as_view(), name="user"),
+    path('update-profile/<int:user_id>', views.ProfileEditView.as_view(), name="update-profile"),
 
 ]
 
