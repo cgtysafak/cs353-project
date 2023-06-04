@@ -575,19 +575,19 @@ class ProfileView(View):
         current_user_type = cursor.fetchone()
         cursor.close()
         
-        # if user_type[0] == 'Job Hunter':
-        #     # cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills, R.portfolio_url, R.avg_career_grd FROM RegularUser as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
-        #     cursor.execute("SELECT * FROM User WHERE user_id=%s", [profile_id])
-        #     user = cursor.fetchone()
-        # elif user_type[0] == 'Recruiter':
-        #     cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills FROM Recruiter as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
-        #     user_info = cursor.fetchall()
-        # elif user_type[0] == 'CareerExpert':
-        #     cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, CO.name, N.skills FROM CareerExpert as C JOIN NonAdmin as N JOIN User as U JOIN Company as CO WHERE CO.company_id = N.company_id AND C.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
-        #     user_info = cursor.fetchall()
-
-
-        return render(request, 'career/user.html', {'user': user, 'current_user_type': current_user_type[0], 'profile_user_type': profile_user_type[0], 'current_user_id': current_user_id})
+        cursor = connection.cursor()
+        if profile_user_type[0] == 'RegularUser':
+            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills, R.portfolio_url, R.avg_career_grd FROM RegularUser as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
+        elif profile_user_type[0] == 'Recruiter':
+            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills FROM Recruiter as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
+        elif profile_user_type[0] == 'CareerExpert':
+            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, CO.name, N.skills FROM CareerExpert as C JOIN NonAdmin as N JOIN User as U JOIN Company as CO WHERE CO.company_id = N.company_id AND C.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
+        elif profile_user_type[0] == 'Admin':
+            return render(request, 'career/user.html', {'user': user, 'user_info': None, 'current_user_type': current_user_type[0], 'profile_user_type': profile_user_type[0], 'current_user_id': current_user_id})
+        user_info = cursor.fetchall()
+        cursor.close()
+        
+        return render(request, 'career/user.html', {'user': user, 'user_info': user_info[0], 'current_user_type': current_user_type[0], 'profile_user_type': profile_user_type[0], 'current_user_id': current_user_id})
 
 
 class ProfileEditView(View):
