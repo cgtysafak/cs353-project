@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS job_application_count;
+DROP VIEW IF EXISTS average_age_view;
 DROP TABLE IF EXISTS Message;
 DROP TABLE IF EXISTS Chat;
 DROP TABLE IF EXISTS Application;
@@ -375,3 +377,14 @@ VALUES
     (2, 1, 'Hi', '2023-05-07 13:10:24'),
     (1, 3, 'How are you?', '2023-04-03 15:13:49'),
     (5, 2, 'Can you check my profile?', '2023-05-24 19:41:20');
+
+
+CREATE VIEW job_application_count AS
+SELECT J.job_id, J.title, COUNT(user_id) AS application_count
+FROM Job J
+LEFT JOIN Application A ON J.job_id = A.job_id
+GROUP BY J.job_id, J.title;
+
+CREATE VIEW average_age_view AS
+SELECT AVG(CAST((strftime('%Y', 'now') - strftime('%Y', birth_date)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birth_date)) AS REAL)) AS average_age
+FROM NonAdmin;
