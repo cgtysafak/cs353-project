@@ -316,15 +316,14 @@ VALUES
 
 INSERT INTO Job(company_id, recruiter_id, job_id, title, due_date, profession, location, job_requirements, description)
 VALUES
-    -- (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering'),
+    (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering'),
     (2, 2, 2, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript, Senior Developer', 'Project Manager for app.'),
     (2, 6, 3, 'Front-end Developer', '2023-06-06', 'Developer', 'Ankara', 'Bootstrap', 'Front-end developer for DB project.'),
     (3, 2, 4, 'Project Manager', '2023-06-06', 'Engineer', 'New York', 'C#, Javascript', 'Project Manager for app.'),
     (4, 6, 5, 'Backend Developer', '2023-06-06', 'Developer', 'New York', 'C#, Javascript', 'Project Manager for app.'),
     (3, 2, 6, 'Software Tester', '2023-06-06', 'Tester', 'Ankara', 'C#, Javascript', 'Project Manager for app.'),
     (1, 6, 7, 'Senior Backend Developer', '2023-06-06', 'Developer', 'New York', 'Senior Developer', 'Project Manager for app.'),
-    (4, 6, 8, 'Technical Lead/Manager', '2023-06-06', 'Tech Lead', 'Istanbul', 'Java, Javascript', 'Project Manager for app.'),
-    (1, 2, 1, 'Junior Software Developer', '2023-07-16', 'Computer Engineer', 'Los Angeles', 'Python, Java', 'Full-Time Software Engineering');
+    (4, 6, 8, 'Technical Lead/Manager', '2023-06-06', 'Tech Lead', 'Istanbul', 'Java, Javascript', 'Project Manager for app.');
 
 INSERT INTO Post(user_id, title, content, date)
 VALUES

@@ -265,6 +265,67 @@ class AddJobView(View):
             else:
                 return render(request, 'career/add-job.html')
 
+class EditJobView(View):
+    def get(self, request, job_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM User NATURAL JOIN Recruiter WHERE user_id = %s;", [user_id])
+        recruiter = cursor.fetchone()
+        cursor.close()
+        
+        cursor = connection.cursor()
+        cursor.execute("SELECT company_id FROM NonAdmin WHERE user_id = %s;", [user_id])
+        company_id = cursor.fetchone()
+        cursor.close()
+        
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Company WHERE company_id = %s;", company_id)
+        company = cursor.fetchone()
+        cursor.close()
+        
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Job WHERE job_id = %s;", [job_id])
+        job = cursor.fetchone()
+        cursor.close()
+        
+
+        if recruiter is None:
+            return redirect('job-list')
+        else:
+            return render(request, 'career/edit_job.html', {'company': company, 'job': job})
+
+    def post(self, request, job_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM NonAdmin NATURAL JOIN Recruiter WHERE user_id = %s;", [user_id])
+        recruiter = cursor.fetchone()
+        cursor.close()
+        
+        if recruiter is None:
+            return redirect('job-list')
+        else:
+            title = request.POST.get("job-title", "")
+            due_date = request.POST.get("due-date", "")
+            profession = request.POST.get("job-profession", "")
+            location = request.POST.get("job-location", "")
+            job_requirements = request.POST.get("job-requirements", "")
+            description = request.POST.get("job-description", "")
+
+            if title != "":
+                cursor = connection.cursor()
+                cursor.execute("UPDATE Job SET title=%s, due_date=%s, profession=%s, location=%s, job_requirements=%s, description=%s WHERE job_id=%s;", (title, due_date, profession, location, job_requirements, description, job_id))
+                # cursor.execute("INSERT INTO Job(company_id, recruiter_id, title, due_date, profession, location, "
+                #                "job_requirements, description) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);",
+                #                (recruiter[1], recruiter[0], title, due_date, profession, location, job_requirements,
+                #                 description))
+                connection.commit()
+                cursor.close()
+                messages.success(request, "Message is added")
+
+                return redirect('job-list')
+
+            else:
+                return render(request, 'career/edit-job.html')
 
 class CandidatesView(View):
     def get(self, request, job_id):
@@ -442,6 +503,35 @@ class DeleteCommentView(View):
             cursor.close()
 
         return redirect('post-detail', post_id=post_id)
+
+class DeleteJobView(View):
+    def get(self, request, job_id):
+        user_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT recruiter_id, company_id FROM Job WHERE job_id = %s", [job_id])
+        result = cursor.fetchone()
+        if result is None:
+            messages.error(request, 'comment-cannot-be-found')
+            return redirect('post-detail', post_id=post_id)
+
+        job_recruiter_id = result[0]
+        job_company_id = result[1]
+        cursor.close()
+        
+        if job_recruiter_id != user_id:
+            messages.error(request, "You are not permitted to delete this post")
+        else:
+            cursor = connection.cursor()
+            cursor.execute('DELETE FROM Application WHERE job_id = %s', [job_id])
+            connection.commit()
+            cursor.close()
+            
+            cursor = connection.cursor()
+            cursor.execute('DELETE FROM Job WHERE job_id = %s', [job_id])
+            connection.commit()
+            cursor.close()
+
+        return redirect('job-list')
 
 
 
