@@ -512,7 +512,7 @@ class DeleteJobView(View):
         result = cursor.fetchone()
         if result is None:
             messages.error(request, 'comment-cannot-be-found')
-            return redirect('post-detail', post_id=post_id)
+            return redirect('job-list')
 
         job_recruiter_id = result[0]
         job_company_id = result[1]
@@ -533,11 +533,7 @@ class DeleteJobView(View):
 
         return redirect('job-list')
 
-
-
-# #######################################################################################################
-
-# EXPERIENCES AND EDUCATION VİEW PART #
+# EXPERIENCES AND EDUCATION VIEW PART #
 
 '''
 class ExperienceListView(View):
