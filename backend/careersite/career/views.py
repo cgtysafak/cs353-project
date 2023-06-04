@@ -489,7 +489,7 @@ class DeleteCommentView(View):
         result = cursor.fetchone()
         if result is None:
             messages.error(request, 'comment-cannot-be-found')
-            return redirect('post-detail', post_id=post_id)
+            return redirect('post-list')
 
         comment_user_id = result[0]
         post_id = result[1]
@@ -666,6 +666,61 @@ class ProfileEditView(View):
                 messages.success(request, "Your changes are saved.")
 
         return render(request, 'career/user.html')
+
+
+# CAREER EXPERT GRADING
+class GradingView(View):
+    def get(self, request, user_id):
+        expert_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_id FROM CareerExpert WHERE user_id=%s", [expert_id])
+        expert = cursor.fetchone()
+
+        cursor.execute("SELECT * FROM RegularUser Natural Join User WHERE user_id=%s", [user_id])
+        user = cursor.fetchone()
+
+        if expert is None:
+            return redirect('user', user_id=user_id)
+
+        else:
+            context = {'user': user, 'user_id': user_id}
+            return render(request, 'career/grading.html', context)
+
+    def post(self, request, user_id):
+
+        expert_id = request.session['user_id']
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_id FROM CareerExpert WHERE user_id=%s", [expert_id])
+        expert = cursor.fetchone()
+
+        cursor.execute("SELECT * FROM RegularUser Natural Join User WHERE user_id=%s", [user_id])
+        user = cursor.fetchone()
+        cursor.close()
+
+        if expert is None or user is None:
+            return redirect('user', user_id=user_id)
+
+        else:
+            grade = request.POST.get("grade", 5)
+            feedback = request.POST.get("feedback", "")
+
+            parameters = [user_id, expert_id, grade, feedback]
+            cursor = connection.cursor()
+            cursor.execute(
+                "INSERT INTO CareerGrade(user_id, expert_id, grade, feedback_text ) VALUES(%s,%s,%s,%s);",
+                parameters)
+
+            cursor.close()
+            connection.commit()
+
+            # context = {'user': user}
+            return redirect('home')
+
+
+
+
+
+
 
 
 

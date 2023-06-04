@@ -83,7 +83,7 @@ CREATE TABLE Experience(
     FOREIGN KEY(user_id) REFERENCES NonAdmin(user_id)
 );
 
-CREATE TABLE Company( 
+CREATE TABLE Company(
     company_id INTEGER PRIMARY KEY,
     location VARCHAR(255),
     description VARCHAR(1023),
@@ -107,22 +107,22 @@ CREATE TABLE Education(
     FOREIGN KEY (experience_id) REFERENCES Experience(experience_id)
 );
 
-CREATE TABLE CareerGrade( 
-    grade_id INTEGER,
+CREATE TABLE CareerGrade(
+    grade_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     expert_id INTEGER NOT NULL,
     grade INTEGER NOT NULL,
     feedback_text TEXT,
-    PRIMARY KEY(grade_id, user_id, expert_id),
     FOREIGN KEY (user_id) REFERENCES NonAdmin(user_id),
     FOREIGN KEY (expert_id) REFERENCES CareerExpert(user_id)
 );
 
-CREATE TRIGGER insert_careergrade_id AFTER INSERT ON CareerGrade
-BEGIN
-	UPDATE CareerGrade SET grade_id = (SELECT MAX(grade_id) FROM CareerGrade WHERE user_id = NEW.user_id AND expert_id = NEW.expert_id);
-END;
-	
+
+--CREATE TRIGGER insert_careergrade_id AFTER INSERT ON CareerGrade
+--BEGIN
+--	UPDATE CareerGrade SET grade_id = (SELECT MAX(grade_id) FROM CareerGrade WHERE user_id = NEW.user_id AND expert_id = NEW.expert_id);
+--END;
+
 CREATE TABLE Job(
     company_id INTEGER NOT NULL,
     recruiter_id INTEGER NOT NULL,
@@ -156,7 +156,7 @@ CREATE TABLE Comment (
     FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
--- CREATE TABLE Message( 
+-- CREATE TABLE Message(
 --     message_id INTEGER PRIMARY KEY AUTOINCREMENT,
 --     sender_id INT NOT NULL,
 --     receiver_id INT NOT NULL,
@@ -219,7 +219,7 @@ CREATE TABLE Blocked(
 );
 
 
-CREATE TABLE Application( 
+CREATE TABLE Application(
     user_id INTEGER NOT NULL,
     job_id INTEGER NOT NULL,
     date DATETIME,
@@ -230,7 +230,7 @@ CREATE TABLE Application(
     FOREIGN KEY(job_id) REFERENCES Job(job_id)
 );
 
--- CREATE TABLE Chat( 
+-- CREATE TABLE Chat(
 --     user_id1 INTEGER NOT NULL,
 --     user_id2 INTEGER NOT NULL,
 --     PRIMARY KEY(user_id1, user_id2),
@@ -274,7 +274,7 @@ VALUES
     (5);
 
 INSERT INTO Report(report_id, report_url, start_date, location, job_type, user_type, creator_id)
-VALUES 
+VALUES
     (1, 'https://example.com/report.pdf', '2023-02-25 14:32:56', 'Ankara', 'Part-Time', 'Regular User', 4);
 
 INSERT INTO Experience(experience_id, user_id, description, start_date, end_date)
@@ -283,7 +283,7 @@ VALUES
     (2, 2, 'Job at Apple', '2022-07-25', '2023-02-01'),
     (3, 2, 'Job at Google', '2016-04-29', '2023-05-06'),
     (4, 3, 'Internship at Intel', '2022-09-18', '2022-10-25'),
-    (5, 5, 'Job at Apple', '2005-01-13', '2018-03-23'), 
+    (5, 5, 'Job at Apple', '2005-01-13', '2018-03-23'),
     (6, 1, 'University', '2012-09-12', '2016-06-24'),
     (7, 2, 'University', '2008-07-27', '2012-05-05'),
     (8, 3, 'University', '2018-08-29', '2022-06-14');
@@ -311,8 +311,8 @@ VALUES
 
 INSERT INTO CareerGrade(grade_id, user_id, expert_id, grade, feedback_text)
 VALUES
-    (1, 1, 5, 83.72, 'Add more photos.'),
-    (2, 3, 5, 97.64, 'Give more detailed descriptions for experiences.');
+    (1, 1, 5, 8, 'Add more photos.'),
+    (2, 3, 5, 9, 'Give more detailed descriptions for experiences.');
 
 INSERT INTO Job(company_id, recruiter_id, job_id, title, due_date, profession, location, job_requirements, description)
 VALUES
