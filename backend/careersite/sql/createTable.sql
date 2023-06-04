@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS RegularUser;
 DROP TABLE IF EXISTS NonAdmin;
 DROP TABLE IF EXISTS Admin;
 DROP TABLE IF EXISTS User;
+--DROP TRIGGER IF EXISTS update_average;
 
 CREATE TABLE User(
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -117,11 +118,16 @@ CREATE TABLE CareerGrade(
     FOREIGN KEY (expert_id) REFERENCES CareerExpert(user_id)
 );
 
-
---CREATE TRIGGER insert_careergrade_id AFTER INSERT ON CareerGrade
---BEGIN
---	UPDATE CareerGrade SET grade_id = (SELECT MAX(grade_id) FROM CareerGrade WHERE user_id = NEW.user_id AND expert_id = NEW.expert_id);
---END;
+CREATE TRIGGER IF NOT EXISTS update_average
+    AFTER INSERT ON CareerGrade
+    FOR EACH ROW
+    BEGIN
+        UPDATE RegularUser
+        SET avg_career_grd = (
+            SELECT AVG(grade) FROM CareerGrade C WHERE C.user_id = NEW.user_id
+        )
+        WHERE RegularUser.user_id = NEW.user_id;
+    END;
 
 CREATE TABLE Job(
     company_id INTEGER NOT NULL,
