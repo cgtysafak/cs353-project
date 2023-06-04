@@ -27,10 +27,7 @@
                         <hr/>
                     {% endif %}
                     {% if current_user_id == user.0 %}
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                        >
+                        <button class="btn btn-primary" onclick="location.href='/edit-profile/{{current_user_id}}'" type="button">
                             Edit Profile
                         </button>
                         <br><br>
@@ -38,10 +35,7 @@
                             THATS YOUR PROFILE.
                         </div>
                     {% elif current_user_type == 'CareerExpert' and profile_user_type == 'RegularUser'%}
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                        >
+                        <button class="btn btn-primary" onclick="location.href='/grading/{{user.0}}'" type="button">
                             Grade this profile!
                         </button>
                         <br><br>
@@ -51,10 +45,7 @@
                     {% elif current_user_type == 'Admin'%}
                             <br>
                     {% else %}
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                        >
+                        <button class="btn btn-primary" onclick="location.href='/add-connection/{{user.0}}'" type="button">
                             Add connection!
                         </button>
                         <br><br>
