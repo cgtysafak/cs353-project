@@ -557,31 +557,36 @@ class AddExperience(View):
 
 # PROFILE VIEW #
 class ProfileView(View):
-    def get(self, request):
-        user_id = request.session['user_id']
+    def get(self, request, profile_id):
+        current_user_id = request.session['user_id']
         cursor = connection.cursor()
-        cursor.execute("SELECT user_type FROM User WHERE user_id=%s", [user_id])
+        cursor.execute("SELECT user_type FROM User WHERE user_id=%s", [profile_id])
         user_type = cursor.fetchone()
-        user_info = ""
+        cursor.close()
 
-        if user_type[0] == 'Job Hunter':
-            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills, R.portfolio_url, R.avg_career_grd FROM RegularUser as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
-            user_info = cursor.fetchall()
-        elif user_type[0] == 'Recruiter':
-            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills FROM Recruiter as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
-            user_info = cursor.fetchall()
-        elif user_type[0] == 'CareerExpert':
-            cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, CO.name, N.skills FROM CareerExpert as C JOIN NonAdmin as N JOIN User as U JOIN Company as CO WHERE CO.company_id = N.company_id AND C.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [user_id])
-            user_info = cursor.fetchall()
-        elif user_type[0] == 'Admin':
-            cursor.execute("SELECT U.full_name, U.email_address, U.dp_url, U.username, U.password FROM Admin as A JOIN User as U WHERE A.user_id = U.user_id AND U.user_id=%s", [user_id])
-            user_info = cursor.fetchall()
-        else:
-            return HttpResponse("Invalid user type" + user_type[0])
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM User WHERE user_id=%s", [profile_id])
+        user = cursor.fetchone()
+        
+        # if user_type[0] == 'Job Hunter':
+        #     # cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills, R.portfolio_url, R.avg_career_grd FROM RegularUser as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
+        #     cursor.execute("SELECT * FROM User WHERE user_id=%s", [profile_id])
+        #     user = cursor.fetchone()
+        # elif user_type[0] == 'Recruiter':
+        #     cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, C.name, N.skills FROM Recruiter as R JOIN NonAdmin as N JOIN User as U JOIN Company as C WHERE N.company_id = C.company_id AND R.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
+        #     user_info = cursor.fetchall()
+        # elif user_type[0] == 'CareerExpert':
+        #     cursor.execute("SELECT U.full_name, N.birth_date, U.email_address, U.dp_url, U.username, U.password, N.profession, CO.name, N.skills FROM CareerExpert as C JOIN NonAdmin as N JOIN User as U JOIN Company as CO WHERE CO.company_id = N.company_id AND C.user_id = N.user_id AND N.user_id = U.user_id AND U.user_id=%s", [profile_id])
+        #     user_info = cursor.fetchall()
+        # elif user_type[0] == 'Admin':
+        #     cursor.execute("SELECT U.full_name, U.email_address, U.dp_url, U.username, U.password FROM Admin as A JOIN User as U WHERE A.user_id = U.user_id AND U.user_id=%s", [profile_id])
+        #     user_info = cursor.fetchall()
+        # else:
+        #     return HttpResponse("Invalid user type " + user_type[0])
 
         cursor.close()
 
-        return render(request, 'career/user.html', {'user_info': user_info, 'user_type': user_type})
+        return render(request, 'career/user.html', {'user': user, 'user_type': user_type, 'current_user_id': current_user_id})
 
 
 class ProfileEditView(View):

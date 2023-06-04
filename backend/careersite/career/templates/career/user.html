@@ -2,13 +2,48 @@
 
 {% block content %}
 
-<div>
-    <h1>Profile</h1>
+<div class="h-100 d-flex align-items-center justify-content-center mt-5">
+    <div>
+        <tr>
+            <div class="card" style="width: 48rem;">
+                <div class="card-body">
+                    <h2 class="card-title">Profile page for @{{user.2}}</h2>
+                    <hr/>
+                    <p class="card-title"><b>Full Name:</b> {{user.2}}</p>
+                    <p class="card-title"><b>Email Address:</b> {{user.4}}</p>
+                    <p class="card-title"><b>Registeration Date:</b> {{user.6}}</p>
+                    <p class="card-title"><b>Account Type:</b> {{user.7}}</p>
+                    <hr/>
+                    {% if current_user_id == user.0 %}
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Apply this job!
+                        </button>
+                        <br><br>
+                        <div class="alert alert-warning" role="alert">
+                            THATS YOUR PROFILE.
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger" role="alert">
+                            THATS NOT YOUR PROFILE.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </tr>
+        <br>
+    </div>
+</div>
+
+{% comment %} <div>
     {% if user_type.0 == 'Job Hunter' %}
         <table>
             <tr>
-                <th>Name: </th>
-                <td>{{user_info.0.0}}</td>
+                <th>({{user}})</th>
+                <th>Name:</th>
+                <td>{{user.2}}</td>
             </tr>
             <tr>
                 <th>Date of Birth: </th>
@@ -155,5 +190,6 @@
     {% else %}
         <h2>Wrong User Type! Please Login Again.</h2>
     {% endif %}
-</div>
+</div> {% endcomment %}
+
 {% endblock %}
