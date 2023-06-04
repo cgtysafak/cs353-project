@@ -26,7 +26,9 @@ urlpatterns = [
     path('delete-post/<int:post_id>', views.DeletePostView.as_view(), name="delete-post"),
     path('post-detail/<int:post_id>', views.PostDetailView.as_view(), name="post-detail"),
     path('delete-comment/<int:comment_id>', views.DeleteCommentView.as_view(), name="delete-comment"),
+    path('delete-job/<int:job_id>', views.DeleteJobView.as_view(), name="delete-job"),
     path('add-job/', views.AddJobView.as_view(), name="add-job"),
+    path('edit-job/<int:job_id>', views.EditJobView.as_view(), name="edit-job"),
     path('user/', views.ProfileView.as_view(), name="user"),
     path('update-profile/<int:user_id>', views.ProfileEditView.as_view(), name="update-profile"),
 
