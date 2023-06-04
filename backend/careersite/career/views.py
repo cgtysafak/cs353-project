@@ -14,7 +14,22 @@ class HomeView(View):
             user_id = request.session['user_id']
             user_type = request.session['user_type']
             username = request.session['username']
-            return render(request, 'career/home.html', {'user_type': user_type, 'username': username, 'user_id': user_id})
+
+            # reports
+            cursor = connection.cursor()
+
+            cursor.execute("SELECT * FROM job_application_count WHERE application_count = "
+                           "(SELECT MAX(application_count) FROM job_application_count)")
+            most_popular_job = cursor.fetchone()
+
+            cursor.execute("SELECT average_age FROM average_age_view")
+            average_age = cursor.fetchone()
+
+
+
+            context = {'user_type': user_type, 'username': username, 'user_id': user_id,
+                       'most_popular_job': most_popular_job, 'average_age': average_age}
+            return render(request, 'career/home.html', context)
         return HttpResponseRedirect("/login")
 
 class UsersView(View):
@@ -716,12 +731,5 @@ class GradingView(View):
 
             # context = {'user': user}
             return redirect('home')
-
-
-
-
-
-
-
 
 
