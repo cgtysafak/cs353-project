@@ -25,10 +25,9 @@ class HomeView(View):
             cursor.execute("SELECT average_age FROM average_age_view")
             average_age = cursor.fetchone()
 
-
-
             context = {'user_type': user_type, 'username': username, 'user_id': user_id,
                        'most_popular_job': most_popular_job, 'average_age': average_age}
+        
             return render(request, 'career/home.html', context)
         return HttpResponseRedirect("/login")
 
@@ -37,7 +36,6 @@ class UsersView(View):
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM User;")
         users = cursor.fetchall()
-
         cursor.close()
 
         return render(request, 'career/users.html', {'users': users})
@@ -60,6 +58,7 @@ class LoginView(View):
 
         except:
             print("db cannot be found")
+            
             return render(request, 'career/login.html')
 
         if user != None:
@@ -69,11 +68,12 @@ class LoginView(View):
                 print("--------------------", request.session['user_type'])
                 success = True
                 context = {'success': success, 'username': username}
-                # return JsonResponse(context)
                 messages.success(request, 'You logged the system successfully')
+                
                 return HttpResponseRedirect("/home")
         else:
             messages.error(request, 'User cannot be found')
+            
             return render(request, 'career/login.html')
 
 
@@ -92,6 +92,7 @@ class SignUpView(View):
 
         if password != passwordver:
             print("passwords are not same")
+            
             return render(request, 'career/signup.html')
         else:
             if username !="" and email != "" and password != "":
@@ -133,14 +134,17 @@ class SignUpView(View):
                     connection.commit()
 
                 print("user is successfully created")
+                
                 return HttpResponseRedirect("/login")
             else:
                 print("Please fill all information")
+                
                 return render(request, 'career/signup.html')
 
 class LogoutView(View):
     def get(self, request):
         request.session.flush()
+        
         return HttpResponseRedirect("/")
 
 class JobListingsView(View):
@@ -154,7 +158,6 @@ class JobListingsView(View):
         if search_term is not None:
             query += " WHERE J.title LIKE %s OR  C.name LIKE %s OR J.profession LIKE %s"
             cursor.execute(query, [('%' + search_term + '%'), ('%' + search_term + '%'), ('%' + search_term + '%')])
-
         else:
             cursor.execute(query)
         jobs = cursor.fetchall()
@@ -277,7 +280,6 @@ class AddJobView(View):
                 messages.success(request, "Message is added")
 
                 return redirect('job-list')
-
             else:
                 return render(request, 'career/add-job.html')
 
@@ -304,7 +306,6 @@ class EditJobView(View):
         job = cursor.fetchone()
         cursor.close()
         
-
         if recruiter is None:
             return redirect('job-list')
         else:
@@ -330,16 +331,11 @@ class EditJobView(View):
             if title != "":
                 cursor = connection.cursor()
                 cursor.execute("UPDATE Job SET title=%s, due_date=%s, profession=%s, location=%s, job_requirements=%s, description=%s WHERE job_id=%s;", (title, due_date, profession, location, job_requirements, description, job_id))
-                # cursor.execute("INSERT INTO Job(company_id, recruiter_id, title, due_date, profession, location, "
-                #                "job_requirements, description) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);",
-                #                (recruiter[1], recruiter[0], title, due_date, profession, location, job_requirements,
-                #                 description))
                 connection.commit()
                 cursor.close()
                 messages.success(request, "Message is added")
 
                 return redirect('job-list')
-
             else:
                 return render(request, 'career/edit-job.html')
 
@@ -363,8 +359,6 @@ class PostListView(View):
         query = "SELECT *, count(P.post_id) as num_of_comments FROM Post as P NATURAL JOIN User " \
                 "LEFT JOIN Comment as C ON P.post_id = C.post_id " \
                 "WHERE 1=1 GROUP BY P.post_id"
-        # query = "SELECT *, count(post_id) as num_of_comments FROM POST NATURAL JOIN User " \
-        #        "WHERE 1=1 GROUP BY post_id"
 
         params = []
 
@@ -378,16 +372,12 @@ class PostListView(View):
         cursor = connection.cursor()
         cursor.execute(query, params)
         posts = cursor.fetchall()
-
         cursor.close()
 
         return render(request, 'career/post_list.html', {'posts': posts, 'user_id': user_id})
 
-
 class AddPostView(View):
     def get(self, request):
-        # cursor = connection.cursor()
-        # cursor.close()
         return render(request, 'career/add_post.html')
 
     def post(self, request):
@@ -402,10 +392,11 @@ class AddPostView(View):
             connection.commit()
             cursor.close()
             messages.success(request, "Message is added")
+        
             return redirect('/post-list')
+        
         return render(request, 'career/add_post.html')
-
-
+    
 class DeletePostView(View):
     def get(self, request, post_id):
         print('deneme')
@@ -417,9 +408,9 @@ class DeletePostView(View):
 
         csrf_token = get_token(request)
         headers = {'X-CSRFToken': csrf_token}
+        
         if post_user_id[0] != user_id:
             messages.error(request, "You are not permitted to delete this post")
-
         else:
             cursor = connection.cursor()
             print('deneme')
@@ -430,7 +421,6 @@ class DeletePostView(View):
 
         return redirect("/post-list", headers=headers)
 
-
 class PostDetailView(View):
     def get(self, request, post_id):
         user_id = request.session['user_id']
@@ -439,7 +429,7 @@ class PostDetailView(View):
         post = cursor.fetchone()
         cursor.close()
 
-        # get all comments which belong to chosen post
+        # get all comments which belong to the chosen post
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM Comment NATURAL JOIN User WHERE post_id = %s", [post_id])
         comments = cursor.fetchall()
@@ -456,7 +446,7 @@ class PostDetailView(View):
         post = cursor.fetchone()
         cursor.close()
 
-        # get all comments which belong to chosen post
+        # get all comments which belong to the chosen post
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM Comment WHERE post_id =%s ", [post_id])
         comments = cursor.fetchall()
@@ -472,6 +462,7 @@ class PostDetailView(View):
         cursor.close()
 
         context = {'user_id': user_id, 'post': post, 'comments': comments}
+        
         return redirect("post-detail", post_id=post_id)
 
 
@@ -490,7 +481,6 @@ class DeleteCommentView(View):
         cursor.close()
         if comment_user_id != user_id:
             messages.error(request, "You are not permitted to delete this post")
-
         else:
             cursor = connection.cursor()
             cursor.execute('DELETE FROM Comment WHERE comment_id = %s', [comment_id])
@@ -528,25 +518,11 @@ class DeleteJobView(View):
 
         return redirect('job-list')
 
-# EXPERIENCES AND EDUCATION VIEW PART #
-
-'''
-class ExperienceListView(View):
-    def get(self, request):
-        user_id = request.session['user_id']
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM Experience WHERE user_id = " + user_id + "")
-        experiences = cursor.fetchall()
-        cursor.close()
-
-        return render(request, 'career/experience_list.html', {'experiences': experiences})
-'''
-
-
 class AddExperience(View):
     def get(self, request):
         user_id = request.session['user_id']
         cursor = connection.cursor()
+        
         return render(request, 'career/add_experience.html')
 
 # PROFILE VIEW #
@@ -631,9 +607,6 @@ class ProfileEditView(View):
             cursor = connection.cursor()
             cursor.execute("UPDATE User SET full_name=%s, email_address=%s WHERE user_id=%s;", (full_name, email_address, user_id))
             
-            ## nonadmin icin bday, profession, skills update
-            ## regularuser icin portfolio_url update
-            
             if user_type[0] != 'Admin':
                 cursor.execute("UPDATE NonAdmin SET birth_date=%s, profession=%s, skills=%s WHERE user_id=%s;", (birth_date, profession, skills, user_id))
             if user_type[0] == 'RegularUser':   
@@ -644,86 +617,6 @@ class ProfileEditView(View):
             
         return redirect('user', profile_id=real_user_id)
 
-# class ProfileEditView(View):
-#     def get(self, request, user_id):
-#         return render(request, 'career/update_profile.html')
-    
-#     def post(self, request, user_id): 
-#         name = request.POST.get("name", "")
-#         dob = request.POST.get("dob", "")
-#         email = request.POST.get("email", "")
-#         dp_url = request.POST.get("dp_url", "")
-#         username = request.POST.get("username", "")
-#         password = request.POST.get("password", "")
-#         profession = request.POST.get("profession", "")
-#         skills = request.POST.get("skills", "")
-#         company = request.POST.get("company", "")
-#         portfolio = request.POST.get("portfolio", "")
-
-#         # user_id =request.session['user_id']
-#         cursor = connection.cursor()
-#         cursor.execute("SELECT user_type FROM User WHERE user_id=%s", [user_id])
-#         user_type = cursor.fetchone()
-        
-#         if name != "":
-#             cursor.execute("UPDATE User SET full_name=%s WHERE user_id=%s", [name, user_id])
-#             messages.success(request, "Your changes are saved.")
-
-#         if email != "":
-#             cursor.execute("UPDATE User SET email_address=%s WHERE user_id=%s", [email, user_id])
-#             messages.success(request, "Your changes are saved.")
-
-        
-#         if dp_url != "":
-#             cursor.execute("UPDATE User SET dp_url=%s WHERE user_id=%s", [dp_url, user_id])
-#             messages.success(request, "Your changes are saved.")
-
-
-#         if username != "":
-#             cursor.execute("UPDATE User SET username=%s WHERE user_id=%s", [username, user_id])
-#             messages.success(request, "Your changes are saved.")
-
-
-#         if password != "":
-#             cursor.execute("UPDATE User SET password=%s WHERE user_id=%s", [password, user_id])
-#             messages.success(request, "Your changes are saved.")
-
-
-
-#         if user_type[0] != 'Admin':
-#             if dob != "":
-#                 cursor.execute("UPDATE NonAdmin SET birth_date=%s WHERE user_id=%s", [dob, user_id])
-#                 messages.success(request, "Your changes are saved.")
-
-            
-#             if profession != "":
-#                 cursor.execute("UPDATE NonAdmin SET profession=%s WHERE user_id=%s", [profession, user_id])
-#                 messages.success(request, "Your changes are saved.")
-
-
-#             if skills != "":
-#                 cursor.execute("UPDATE NonAdmin SET skills=%s WHERE user_id=%s", [skills, user_id])
-#                 messages.success(request, "Your changes are saved.")
-
-
-#             if company != "":
-#                 cursor.execute("SELECT company_id FROM Company as C JOIN NonAdmin as N WHERE C.company_id=N.company_id WHERE C.name=%s", company)
-#                 new_comp_id = cursor.fetchone()
-
-#                 if new_comp_id != None:
-#                     cursor.execute("UPDATE NonAdmin SET company_id=%s WHERE user_id=%s", [new_comp_id, user_id])
-#                     messages.success(request, "Your changes are saved.")
-
-                    
-#         if user_type == 'RegularUser':
-#             if portfolio != "":
-#                 cursor.execute("UPDATE RegularUser SET portfolio_url=%s WHERE user_id=%s", [portfolio, user_id])
-#                 messages.success(request, "Your changes are saved.")
-
-#         return render(request, 'career/user.html')
-
-
-# CAREER EXPERT GRADING
 class GradingView(View):
     def get(self, request, user_id):
         expert_id = request.session['user_id']
@@ -736,13 +629,12 @@ class GradingView(View):
 
         if expert is None:
             return redirect('user', user_id=user_id)
-
         else:
             context = {'user': user, 'user_id': user_id}
+            
             return render(request, 'career/grading.html', context)
 
     def post(self, request, user_id):
-
         expert_id = request.session['user_id']
         cursor = connection.cursor()
         cursor.execute("SELECT user_id FROM CareerExpert WHERE user_id=%s", [expert_id])
@@ -754,7 +646,6 @@ class GradingView(View):
 
         if expert is None or user is None:
             return redirect('user', user_id=user_id)
-
         else:
             grade = request.POST.get("grade", 5)
             feedback = request.POST.get("feedback", "")
@@ -768,5 +659,4 @@ class GradingView(View):
             cursor.close()
             connection.commit()
 
-            # context = {'user': user}
             return redirect('home')

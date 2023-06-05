@@ -34,6 +34,3 @@ urlpatterns = [
     path('grading/<int:user_id>', views.GradingView.as_view(), name="grading"),
 
 ]
-
-
-

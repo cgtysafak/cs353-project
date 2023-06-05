@@ -164,15 +164,6 @@ CREATE TABLE Comment (
     FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
--- CREATE TABLE Message(
---     message_id INTEGER PRIMARY KEY AUTOINCREMENT,
---     sender_id INT NOT NULL,
---     receiver_id INT NOT NULL,
---     content TEXT NOT NULL,
---     timestamp DATETIME,
---     FOREIGN KEY (sender_id, receiver_id) REFERENCES Chat(user_id1, user_id2)
--- );
-
 CREATE TABLE Message(
     message_id INTEGER PRIMARY KEY AUTOINCREMENT,
     sender_id INT NOT NULL,
@@ -237,14 +228,6 @@ CREATE TABLE Application(
     FOREIGN KEY(user_id) REFERENCES NonAdmin(user_id),
     FOREIGN KEY(job_id) REFERENCES Job(job_id)
 );
-
--- CREATE TABLE Chat(
---     user_id1 INTEGER NOT NULL,
---     user_id2 INTEGER NOT NULL,
---     PRIMARY KEY(user_id1, user_id2),
---     FOREIGN KEY(user_id1) REFERENCES NonAdmin(user_id),
---     FOREIGN KEY(user_id2) REFERENCES NonAdmin(user_id)
--- );
 
 INSERT INTO User(full_name, username, password, email_address, dp_url, date_of_registration, user_type)
 VALUES
