@@ -353,27 +353,6 @@ class CandidatesView(View):
 
         return render(request, 'career/candidates.html', {'candidates': candidates})
 
-# class ApplyJob(View):
-#     def get(self, request, job_id):
-#         user_id = request.session['user_id']
-#         cursor = connection.cursor()
-#         cursor.execute("SELECT * FROM Application WHERE user_id = %s AND job_id = %s;", [user_id, job_id])
-#         result = cursor.fetchone()
-#         cursor.close()
-#         if result is not None:
-#             messages.error('You already applied this job')
-#             return redirect('job-list')
-#         else:
-#             date = datetime.now()
-#             cursor = connection.cursor()
-#             cursor.execute("INSERT INTO Application(user_id, job_id, date) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);",
-#                            (user_id, job_id, date))
-#             connection.commit()
-#             cursor.close()
-#             messages.success(request, 'You applied this job successfully')
-
-#         return redirect('job-list')
-
 class PostListView(View):
     def get(self, request):
 
@@ -604,84 +583,144 @@ class ProfileView(View):
         
         return render(request, 'career/user.html', {'user': user, 'user_info': user_info[0], 'current_user_type': current_user_type[0], 'profile_user_type': profile_user_type[0], 'current_user_id': current_user_id})
 
-
 class ProfileEditView(View):
     def get(self, request, user_id):
-        return render(request, 'career/update_profile.html')
-    
-    def post(self, request, user_id): 
-        name = request.POST.get("name", "")
-        dob = request.POST.get("dob", "")
-        email = request.POST.get("email", "")
-        dp_url = request.POST.get("dp_url", "")
-        username = request.POST.get("username", "")
-        password = request.POST.get("password", "")
+        real_user_id = request.session['user_id']
+        
+        if real_user_id != user_id:
+            return redirect('user', profile_id = user_id)
+        
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_type FROM User WHERE user_id = %s;", [user_id])
+        user_type = cursor.fetchone()
+        cursor.close()
+        
+        cursor = connection.cursor()
+        if user_type[0] == 'RegularUser':
+            cursor.execute("SELECT * FROM User NATURAL JOIN NonAdmin NATURAL JOIN RegularUser WHERE user_id = %s;", [user_id])
+        elif user_type[0] == 'Recruiter':
+            cursor.execute("SELECT * FROM User NATURAL JOIN NonAdmin WHERE user_id = %s;", [user_id])
+        elif user_type[0] == 'CareerExpert':
+            cursor.execute("SELECT * FROM User NATURAL JOIN NonAdmin WHERE user_id = %s;", [user_id])
+        else:
+            cursor.execute("SELECT * FROM User WHERE user_id = %s;", [user_id])
+        user = cursor.fetchone()
+        cursor.close()
+
+        return render(request, 'career/edit_profile.html', {'user_type': user_type, 'user': user})
+
+    def post(self, request, user_id):
+        real_user_id = request.session['user_id']
+        
+        if real_user_id != user_id:
+            return redirect('user', profile_id = user_id)
+        
+        cursor = connection.cursor()
+        cursor.execute("SELECT user_type FROM User WHERE user_id = %s;", [user_id])
+        user_type = cursor.fetchone()
+        cursor.close()
+        
+        full_name = request.POST.get("full-name", "")
+        email_address = request.POST.get("email-address", "")
+        birth_date  = request.POST.get("birth-date", "")
         profession = request.POST.get("profession", "")
         skills = request.POST.get("skills", "")
-        company = request.POST.get("company", "")
-        portfolio = request.POST.get("portfolio", "")
+        portfolio_url = request.POST.get("portfolio-url", "")
 
-        # user_id =request.session['user_id']
-        cursor = connection.cursor()
-        cursor.execute("SELECT user_type FROM User WHERE user_id=%s", [user_id])
-        user_type = cursor.fetchone()
+        if full_name != "" and email_address != "":
+            cursor = connection.cursor()
+            cursor.execute("UPDATE User SET full_name=%s, email_address=%s WHERE user_id=%s;", (full_name, email_address, user_id))
+            
+            ## nonadmin icin bday, profession, skills update
+            ## regularuser icin portfolio_url update
+            
+            if user_type[0] != 'Admin':
+                cursor.execute("UPDATE NonAdmin SET birth_date=%s, profession=%s, skills=%s WHERE user_id=%s;", (birth_date, profession, skills, user_id))
+            if user_type[0] == 'RegularUser':   
+                cursor.execute("UPDATE RegularUser SET portfolio_url=%s WHERE user_id=%s;", (portfolio_url, user_id))
+            
+            connection.commit()
+            cursor.close()
+            
+        return redirect('user', profile_id=real_user_id)
+
+# class ProfileEditView(View):
+#     def get(self, request, user_id):
+#         return render(request, 'career/update_profile.html')
+    
+#     def post(self, request, user_id): 
+#         name = request.POST.get("name", "")
+#         dob = request.POST.get("dob", "")
+#         email = request.POST.get("email", "")
+#         dp_url = request.POST.get("dp_url", "")
+#         username = request.POST.get("username", "")
+#         password = request.POST.get("password", "")
+#         profession = request.POST.get("profession", "")
+#         skills = request.POST.get("skills", "")
+#         company = request.POST.get("company", "")
+#         portfolio = request.POST.get("portfolio", "")
+
+#         # user_id =request.session['user_id']
+#         cursor = connection.cursor()
+#         cursor.execute("SELECT user_type FROM User WHERE user_id=%s", [user_id])
+#         user_type = cursor.fetchone()
         
-        if name != "":
-            cursor.execute("UPDATE User SET full_name=%s WHERE user_id=%s", [name, user_id])
-            messages.success(request, "Your changes are saved.")
+#         if name != "":
+#             cursor.execute("UPDATE User SET full_name=%s WHERE user_id=%s", [name, user_id])
+#             messages.success(request, "Your changes are saved.")
 
-        if email != "":
-            cursor.execute("UPDATE User SET email_address=%s WHERE user_id=%s", [email, user_id])
-            messages.success(request, "Your changes are saved.")
+#         if email != "":
+#             cursor.execute("UPDATE User SET email_address=%s WHERE user_id=%s", [email, user_id])
+#             messages.success(request, "Your changes are saved.")
 
         
-        if dp_url != "":
-            cursor.execute("UPDATE User SET dp_url=%s WHERE user_id=%s", [dp_url, user_id])
-            messages.success(request, "Your changes are saved.")
+#         if dp_url != "":
+#             cursor.execute("UPDATE User SET dp_url=%s WHERE user_id=%s", [dp_url, user_id])
+#             messages.success(request, "Your changes are saved.")
 
 
-        if username != "":
-            cursor.execute("UPDATE User SET username=%s WHERE user_id=%s", [username, user_id])
-            messages.success(request, "Your changes are saved.")
+#         if username != "":
+#             cursor.execute("UPDATE User SET username=%s WHERE user_id=%s", [username, user_id])
+#             messages.success(request, "Your changes are saved.")
 
 
-        if password != "":
-            cursor.execute("UPDATE User SET password=%s WHERE user_id=%s", [password, user_id])
-            messages.success(request, "Your changes are saved.")
+#         if password != "":
+#             cursor.execute("UPDATE User SET password=%s WHERE user_id=%s", [password, user_id])
+#             messages.success(request, "Your changes are saved.")
 
 
 
-        if user_type[0] != 'Admin':
-            if dob != "":
-                cursor.execute("UPDATE NonAdmin SET birth_date=%s WHERE user_id=%s", [dob, user_id])
-                messages.success(request, "Your changes are saved.")
+#         if user_type[0] != 'Admin':
+#             if dob != "":
+#                 cursor.execute("UPDATE NonAdmin SET birth_date=%s WHERE user_id=%s", [dob, user_id])
+#                 messages.success(request, "Your changes are saved.")
 
             
-            if profession != "":
-                cursor.execute("UPDATE NonAdmin SET profession=%s WHERE user_id=%s", [profession, user_id])
-                messages.success(request, "Your changes are saved.")
+#             if profession != "":
+#                 cursor.execute("UPDATE NonAdmin SET profession=%s WHERE user_id=%s", [profession, user_id])
+#                 messages.success(request, "Your changes are saved.")
 
 
-            if skills != "":
-                cursor.execute("UPDATE NonAdmin SET skills=%s WHERE user_id=%s", [skills, user_id])
-                messages.success(request, "Your changes are saved.")
+#             if skills != "":
+#                 cursor.execute("UPDATE NonAdmin SET skills=%s WHERE user_id=%s", [skills, user_id])
+#                 messages.success(request, "Your changes are saved.")
 
 
-            if company != "":
-                cursor.execute("SELECT company_id FROM Company as C JOIN NonAdmin as N WHERE C.company_id=N.company_id WHERE C.name=%s", company)
-                new_comp_id = cursor.fetchone()
+#             if company != "":
+#                 cursor.execute("SELECT company_id FROM Company as C JOIN NonAdmin as N WHERE C.company_id=N.company_id WHERE C.name=%s", company)
+#                 new_comp_id = cursor.fetchone()
 
-                if new_comp_id != None:
-                    cursor.execute("UPDATE NonAdmin SET company_id=%s WHERE user_id=%s", [new_comp_id, user_id])
-                    messages.success(request, "Your changes are saved.")
+#                 if new_comp_id != None:
+#                     cursor.execute("UPDATE NonAdmin SET company_id=%s WHERE user_id=%s", [new_comp_id, user_id])
+#                     messages.success(request, "Your changes are saved.")
 
                     
-        if user_type == 'RegularUser':
-            if portfolio != "":
-                cursor.execute("UPDATE RegularUser SET portfolio_url=%s WHERE user_id=%s", [portfolio, user_id])
-                messages.success(request, "Your changes are saved.")
+#         if user_type == 'RegularUser':
+#             if portfolio != "":
+#                 cursor.execute("UPDATE RegularUser SET portfolio_url=%s WHERE user_id=%s", [portfolio, user_id])
+#                 messages.success(request, "Your changes are saved.")
 
-        return render(request, 'career/user.html')
+#         return render(request, 'career/user.html')
 
 
 # CAREER EXPERT GRADING
@@ -731,5 +770,3 @@ class GradingView(View):
 
             # context = {'user': user}
             return redirect('home')
-
-
